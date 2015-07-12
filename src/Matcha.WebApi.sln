@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hosts", "Hosts", "{8FB6FBC8-616B-4C85-8AB8-00F1189A3DB1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{8002BAA1-0301-4337-80B5-D9A68F80D4D9}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Matcha.WebApi.Host", "Matcha.WebApi.Host\Matcha.WebApi.Host.csproj", "{1AC156B6-655A-4913-B5F2-089E51B8EBEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Matcha.WebApi", "Matcha.WebApi\Matcha.WebApi.csproj", "{5752F01D-7A3C-4EDC-9444-A252828352B9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1AC156B6-655A-4913-B5F2-089E51B8EBEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AC156B6-655A-4913-B5F2-089E51B8EBEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AC156B6-655A-4913-B5F2-089E51B8EBEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AC156B6-655A-4913-B5F2-089E51B8EBEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5752F01D-7A3C-4EDC-9444-A252828352B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5752F01D-7A3C-4EDC-9444-A252828352B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5752F01D-7A3C-4EDC-9444-A252828352B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5752F01D-7A3C-4EDC-9444-A252828352B9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1AC156B6-655A-4913-B5F2-089E51B8EBEF} = {8FB6FBC8-616B-4C85-8AB8-00F1189A3DB1}
+	EndGlobalSection
+EndGlobal
