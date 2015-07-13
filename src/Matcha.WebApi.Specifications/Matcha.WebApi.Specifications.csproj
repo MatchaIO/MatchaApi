@@ -107,6 +107,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LeadFeatures\ControllerSteps.cs" />
+    <Compile Include="LeadFeatures\ScenarioExtensions.cs" />
     <Compile Include="SqliteFileStorageNHibernateModule.cs" />
     <Compile Include="Users.cs" />
     <Compile Include="LeadFeatures\Lead.feature.cs">

@@ -86,7 +86,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 8
  testRunner.When("they submit their contact details", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 9
- testRunner.Then("the lead id is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("the new Id is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 10
  testRunner.And("a SalesAdmin user can retrieve the lead", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 11

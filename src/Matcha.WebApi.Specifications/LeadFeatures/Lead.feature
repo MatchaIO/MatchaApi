@@ -6,7 +6,7 @@
 Scenario: Create a lead
 	Given an anonymous user using the api
 	When they submit their contact details
-	Then the lead id is returned
+	Then the new Id is returned
 	And a SalesAdmin user can retrieve the lead
 	And LeadCreated event is raised
 #

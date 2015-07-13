@@ -3,6 +3,7 @@
     public enum Users
     {
         SalesAdmin,
-        Anon
+        Anon,
+        EventSubscriber
     }
 }
