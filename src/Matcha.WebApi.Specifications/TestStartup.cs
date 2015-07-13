@@ -1,4 +1,7 @@
-﻿using System.Web.Http;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using System.Web.Http;
+using System.Web.Http.ExceptionHandling;
 using Autofac;
 using Autofac.Integration.WebApi;
 using Matcha.WebApi.Config;
@@ -17,6 +20,8 @@ namespace Matcha.WebApi.Specifications
         {
             var config = WebApiConfig.Register();
             app.UseWebApi(config);
+
+            config.Services.Replace(typeof(IExceptionHandler), new TestExceptionHandler());
             Container = SetUpAutofac(config);
         }
 
@@ -32,6 +37,24 @@ namespace Matcha.WebApi.Specifications
             // Configure Web API with the dependency resolver.
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
             return container;
+        }
+
+        class TestExceptionHandler : ExceptionHandler
+        {
+            public override Task HandleAsync(ExceptionHandlerContext context, CancellationToken cancellationToken)
+            {
+                return base.HandleAsync(context, cancellationToken);
+            }
+
+            public override bool ShouldHandle(ExceptionHandlerContext context)
+            {
+                return base.ShouldHandle(context);
+            }
+
+            public override void Handle(ExceptionHandlerContext context)
+            {
+                base.Handle(context);
+            }
         }
     }
 }

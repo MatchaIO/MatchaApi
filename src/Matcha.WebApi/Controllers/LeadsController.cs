@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -16,7 +17,7 @@ namespace Matcha.WebApi.Controllers
         private readonly IQueryHandler<GetLeadById, LeadDetail> _getLead;
 
         public LeadsController(
-            ICommandHandler<CreateLeadCommand, Guid> createLead, 
+            ICommandHandler<CreateLeadCommand, Guid> createLead,
             IQueryHandler<GetLeadById, LeadDetail> getLead)
         {
             _createLead = createLead;
@@ -24,25 +25,44 @@ namespace Matcha.WebApi.Controllers
         }
 
         /// <summary>
+        /// Gets a lead by opportunityId. Restricted to users with sales permssions 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Route("api/leads/{id}")]
+        public LeadDetail Get(Guid id)
+        {
+            return _getLead.Handle(new GetLeadById(id));
+        }
+
+        /// <summary>
         /// Create the bare minimum lead required for Sales to contact the prospective client
         /// Raises <see cref="LeadCreated"/>. 
         /// </summary>
         /// <param name="lead"></param>
+        [Route("api/leads")]
         public HttpResponseMessage Post([FromBody]CreateLeadCommand lead)
         {
             var newId = _createLead.Handle(lead);
             var response = Request.CreateResponse(HttpStatusCode.Created, newId);
-                //Assuming we are following std rest resourcing (ie POST to /X/ and GET from /X/{id})
+            //Assuming we are following std rest resourcing (ie POST to /X/ and GET from /X/{id})
             response.Headers.Location = Request.RequestUri.Combine(newId);
             return response;
         }
     }
-    public static class UriExtensions
+    public class EventsController : ApiController
     {
-        public static Uri Combine(this Uri baseUri, object path)
+        private readonly IEventRepository _eventRepository;
+
+        public EventsController(IEventRepository eventRepository)
         {
-            var baseUrlAsString = baseUri.AbsoluteUri.TrimEnd('/') + "/";
-            return new Uri(baseUrlAsString + path.ToString().TrimStart('/'));
+            _eventRepository = eventRepository;
+        }
+
+        [Route("api/Events/ByType/{eventType}")]
+        public IEnumerable<Event> Get(string eventType)
+        {
+            return _eventRepository.EventsOfType(eventType);//TODO - this is retarded - dont send the whole event store over the wire
         }
     }
 }

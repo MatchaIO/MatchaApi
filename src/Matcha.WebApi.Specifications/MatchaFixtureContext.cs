@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using Autofac;
+using Matcha.WebApi.Handlers;
+using Matcha.WebApi.Messages.Commands;
 using Microsoft.Owin.Testing;
 using NHibernate;
 using NHibernate.Tool.hbm2ddl;
@@ -19,7 +21,7 @@ namespace Matcha.WebApi.Specifications
             _server = TestServer.Create<TestStartup>();
 
             _container = TestStartup.Container;
-
+            _container.Resolve<ICommandHandler<CreateLeadCommand, Guid>>().ToString();
             var configuration = _container.Resolve<NHibernate.Cfg.Configuration>();
 
             new SchemaExport(configuration).Execute(
@@ -44,7 +46,7 @@ namespace Matcha.WebApi.Specifications
         public T Get<T>(Uri urlPath)
         {
             var httpClient = _server.HttpClient;
-            var response = httpClient.GetAsync(urlPath).Result;
+            var response = httpClient.GetAsync(urlPath.PathAndQuery).Result;
             response.EnsureSuccessStatusCode();
             return response.Content.ReadAsAsync<T>().Result;
         }
