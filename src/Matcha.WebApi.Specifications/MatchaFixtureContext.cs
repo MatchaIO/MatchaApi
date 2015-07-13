@@ -1,63 +1,64 @@
 using System;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using Autofac;
-using Matcha.WebApi.Handlers;
-using Matcha.WebApi.Messages.Commands;
+using Matcha.WebApi.Specifications.LeadFeatures;
 using Microsoft.Owin.Testing;
 using NHibernate;
 using NHibernate.Tool.hbm2ddl;
+using TechTalk.SpecFlow;
 
 namespace Matcha.WebApi.Specifications
 {
     public class MatchaFixtureContext
     {
         private readonly TestServer _server;
-        private readonly IContainer _container;
-        private Users _currentUser;
 
         public MatchaFixtureContext()
         {
             _server = TestServer.Create<TestStartup>();
 
-            _container = TestStartup.Container;
-            _container.Resolve<ICommandHandler<CreateLeadCommand, Guid>>().ToString();
-            var configuration = _container.Resolve<NHibernate.Cfg.Configuration>();
+            var container = TestStartup.Container;
+            var configuration = container.Resolve<NHibernate.Cfg.Configuration>();
 
             new SchemaExport(configuration).Execute(
                 useStdOut: false,
                 execute: true,
                 justDrop: false,
-                connection: _container.Resolve<ISession>().Connection,
+                connection: container.Resolve<ISession>().Connection,
                 exportOutput: null //Console.Out
                 );
         }
 
-        public Uri Post<TRequest>(string urlPath, TRequest request)
+        public void Post<TRequest>(string urlPath, TRequest request)
         {
+            var currentuser = ScenarioContext.Current.GetCurrentUser();//TODO
             var httpClient = _server.HttpClient;
             var postResponse = httpClient.PostAsJsonAsync(
                 urlPath,
                 request).Result;
             postResponse.EnsureSuccessStatusCode();
-            return postResponse.Headers.Location;
+            ScenarioContext.Current.SetLastPostHeaders(postResponse.Headers); 
         }
 
         public T Get<T>(Uri urlPath)
         {
+            return Get<T>(urlPath.PathAndQuery);
+        }
+
+        public T Get<T>(string urlPath)
+        {
+            var currentuser = ScenarioContext.Current.GetCurrentUser();//TODO
             var httpClient = _server.HttpClient;
-            var response = httpClient.GetAsync(urlPath.PathAndQuery).Result;
+            var response = httpClient.GetAsync(urlPath).Result;
             response.EnsureSuccessStatusCode();
             return response.Content.ReadAsAsync<T>().Result;
         }
 
-        public void SetCurrentUser(Users user)
-        {
-            _currentUser = user;
-        }
-
         public T GetLastEventOfType<T>()
         {
+            var currentuser = ScenarioContext.Current.GetCurrentUser();//TODO
             var requestUri = "api/Events/ByType/" + typeof(T).Name;
             var getResponse = _server.HttpClient.GetAsync(requestUri).Result;
             getResponse.EnsureSuccessStatusCode();
