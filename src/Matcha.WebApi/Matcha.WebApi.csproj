@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Matcha.WebApi</RootNamespace>
     <AssemblyName>Matcha.WebApi</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">.\</SolutionDir>
@@ -39,9 +39,15 @@
     <Reference Include="Autofac.Integration.WebApi">
       <HintPath>packages\Autofac.WebApi2.3.4.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
     </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\packages\NHibernate.4.0.3.4000\lib\net40\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -63,7 +69,24 @@
   <ItemGroup>
     <Compile Include="Config\WebApiConfig.cs" />
     <Compile Include="Config\WebApiAutofacModule.cs" />
+    <Compile Include="Controllers\LeadsController.cs" />
     <Compile Include="Controllers\MonitorController.cs" />
+    <Compile Include="Controllers\UriExtensions.cs" />
+    <Compile Include="Domain\DataAccess\LeadRepository.cs" />
+    <Compile Include="Domain\DataAccess\EntityNotFoundException.cs" />
+    <Compile Include="Domain\DataAccess\ILeadRepository.cs" />
+    <Compile Include="Domain\DataAccess\NHibernateAutofacModuleBase.cs" />
+    <Compile Include="Domain\DataAccess\NHibenateMappingExtensions.cs" />
+    <Compile Include="Domain\Models\Guard.cs" />
+    <Compile Include="Domain\Models\JsonSerialisedData.cs" />
+    <Compile Include="Domain\Models\Lead.cs" />
+    <Compile Include="Handlers\LeadHandler.cs" />
+    <Compile Include="Messages\Commands\CreateLeadCommand.cs" />
+    <Compile Include="Messages\Dtos\Contact.cs" />
+    <Compile Include="Messages\Dtos\ContactDetails.cs" />
+    <Compile Include="Messages\Events\LeadCreated.cs" />
+    <Compile Include="Messages\Projections\LeadDetail.cs" />
+    <Compile Include="Messages\Queries\GetLeadById.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -72,6 +95,7 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
