@@ -11,7 +11,8 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
     public class ManageLeadsSteps
     {
         private readonly MatchaFixtureContext _matcha;
-        private CreateLeadCommand _cmd;
+        private CreateLeadCommand _createLeadCmd;
+        private UpdateLeadCommand _updateLeadCmd;
         private static readonly Fixture Auto = new Fixture();
 
         public ManageLeadsSteps()
@@ -19,11 +20,20 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
             _matcha = new MatchaFixtureContext();
         }
 
+        [Given(@"they have submited their contact details")]
         [When(@"they submit their contact details")]
         public void WhenTheySubmitTheirContactDetails()
         {
-            _cmd = Auto.Create<CreateLeadCommand>();
-            _matcha.Post("/api/leads", _cmd);
+            _createLeadCmd = Auto.Create<CreateLeadCommand>();
+            _matcha.Post("/api/leads", _createLeadCmd);
+        }
+
+        [When(@"they modify their contact details")]
+        public void WhenTheyModifyTheirContactDetails()
+        {
+            var leadId = ScenarioContext.Current.GetLastPostResponseAggregateId();
+            _updateLeadCmd = Auto.Build<UpdateLeadCommand>().With(cmd => cmd.Id, leadId).Create();
+            _matcha.Put(ScenarioContext.Current.GetLastPostResponseHeaderLocation(), _updateLeadCmd);
         }
 
         [Then(@"a SalesAdmin user can retrieve the lead")]
@@ -31,12 +41,13 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
         {
             ScenarioContext.Current.SetCurrentUser(Users.SalesAdmin);
             var lead = _matcha.Get<LeadDetail>(ScenarioContext.Current.GetLastPostResponseHeaderLocation());
+            var contactDetails = _updateLeadCmd != null ? _updateLeadCmd.ContactDetails : _createLeadCmd.ContactDetails;
             lead.ToExpectedObject()
                 .ShouldMatch(
                 new
                 {
                     Id = ScenarioContext.Current.GetLastPostResponseAggregateId(),
-                    _cmd.ContactDetails
+                    ContactDetails = contactDetails
                 });
         }
 
@@ -50,7 +61,21 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
                 .ShouldMatch(new
                 {
                     Id = ScenarioContext.Current.GetLastPostResponseAggregateId(),
-                    _cmd.ContactDetails
+                    _createLeadCmd.ContactDetails
+                });
+        }
+
+        [Then(@"LeadUpdated event is raised")]
+        public void ThenLeadUpdatedEventIsRaised()
+        {
+            ScenarioContext.Current.SetCurrentUser(Users.EventSubscriber);
+            var createdEvent = _matcha.GetLastEventOfType<LeadUpdated>();
+            createdEvent.LeadDetail
+                .ToExpectedObject()
+                .ShouldMatch(new
+                {
+                    Id = ScenarioContext.Current.GetLastPostResponseAggregateId(),
+                    _updateLeadCmd.ContactDetails
                 });
         }
     }

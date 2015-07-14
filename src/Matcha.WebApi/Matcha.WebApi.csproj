@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="Config\WebApiConfig.cs" />
     <Compile Include="Config\WebApiAutofacModule.cs" />
+    <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\LeadsController.cs" />
     <Compile Include="Controllers\MonitorController.cs" />
     <Compile Include="Controllers\UriExtensions.cs" />
@@ -80,11 +81,14 @@
     <Compile Include="Domain\Models\Guard.cs" />
     <Compile Include="Domain\Models\JsonSerialisedData.cs" />
     <Compile Include="Domain\Models\Lead.cs" />
+    <Compile Include="Handlers\Class1.cs" />
+    <Compile Include="Handlers\InMemoryEventPublisher.cs" />
     <Compile Include="Handlers\LeadHandler.cs" />
     <Compile Include="Messages\Commands\CreateLeadCommand.cs" />
     <Compile Include="Messages\Dtos\Contact.cs" />
     <Compile Include="Messages\Dtos\ContactDetails.cs" />
     <Compile Include="Messages\Events\LeadCreated.cs" />
+    <Compile Include="Messages\Events\LeadUpdated.cs" />
     <Compile Include="Messages\Projections\LeadDetail.cs" />
     <Compile Include="Messages\Queries\GetLeadById.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
