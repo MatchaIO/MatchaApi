@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -14,14 +13,17 @@ namespace Matcha.WebApi.Controllers
     public class LeadsController : ApiController
     {
         private readonly ICommandHandler<CreateLeadCommand, Guid> _createLead;
+        private readonly ICommandHandler<UpdateLeadCommand, Guid> _updateLead;
         private readonly IQueryHandler<GetLeadById, LeadDetail> _getLead;
 
         public LeadsController(
             ICommandHandler<CreateLeadCommand, Guid> createLead,
+            ICommandHandler<UpdateLeadCommand, Guid> updateLead,
             IQueryHandler<GetLeadById, LeadDetail> getLead)
         {
             _createLead = createLead;
             _getLead = getLead;
+            _updateLead = updateLead;
         }
 
         /// <summary>
@@ -29,7 +31,7 @@ namespace Matcha.WebApi.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Route("api/leads/{id}")]
+       // [Route("api/leads/{id}")]
         public LeadDetail Get(Guid id)
         {
             return _getLead.Handle(new GetLeadById(id));
@@ -40,7 +42,7 @@ namespace Matcha.WebApi.Controllers
         /// Raises <see cref="LeadCreated"/>. 
         /// </summary>
         /// <param name="lead"></param>
-        [Route("api/leads")]
+       // [Route("api/leads")]
         public HttpResponseMessage Post([FromBody]CreateLeadCommand lead)
         {
             var newId = _createLead.Handle(lead);
@@ -49,20 +51,21 @@ namespace Matcha.WebApi.Controllers
             response.Headers.Location = Request.RequestUri.Combine(newId);
             return response;
         }
-    }
-    public class EventsController : ApiController
-    {
-        private readonly IEventRepository _eventRepository;
 
-        public EventsController(IEventRepository eventRepository)
+        /// <summary>
+        /// Modifies the sales lead required for Sales to contact the prospective client
+        /// Raises <see cref="LeadUpdated"/>. 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="lead"></param>
+     //   [Route("api/leads/{id}")]
+        public HttpResponseMessage Put(Guid id, [FromBody]UpdateLeadCommand lead)
         {
-            _eventRepository = eventRepository;
-        }
-
-        [Route("api/Events/ByType/{eventType}")]
-        public IEnumerable<Event> Get(string eventType)
-        {
-            return _eventRepository.EventsOfType(eventType);//TODO - this is retarded - dont send the whole event store over the wire
+            lead.Id = id;
+            _updateLead.Handle(lead);
+            var response = Request.CreateResponse(HttpStatusCode.Accepted, id);
+            response.Headers.Location = Request.RequestUri;
+            return response;
         }
     }
 }

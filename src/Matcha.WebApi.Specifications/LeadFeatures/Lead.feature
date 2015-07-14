@@ -9,13 +9,14 @@ Scenario: Create a lead
 	Then the new Id is returned
 	And a SalesAdmin user can retrieve the lead
 	And LeadCreated event is raised
-#
-#Scenario: Continue to add to a lead
-#	Given an anonymous user 
-#	And they submit their contact details
-#	When the modify their contact details
-#	And an sales admin user can view the lead
-#	And LeadUpdated Event is raised
+
+Scenario: Continue to add to a lead
+	Given an anonymous user using the api
+	And they have submited their contact details
+	When they modify their contact details
+	Then a SalesAdmin user can retrieve the lead
+	And LeadUpdated event is raised
+
 #
 #
 #Scenario: Delete A non existant Lead

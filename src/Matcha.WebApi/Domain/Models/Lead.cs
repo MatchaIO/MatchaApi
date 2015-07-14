@@ -27,6 +27,11 @@ namespace Matcha.WebApi.Domain.Models
         /// </summary>
         public virtual ContactDetails ContactDetails { get; protected set; }
 
+        public virtual void Update(LeadUpdated updateEvent)
+        {
+            ContactDetails = updateEvent.LeadDetail.ContactDetails;
+        }
+
         private static void Validate(CreateLeadCommand message)
         {
             //TODO replace with fluent validation if we are going to do this
