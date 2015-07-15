@@ -39,6 +39,12 @@
     <Reference Include="Autofac.Integration.WebApi">
       <HintPath>packages\Autofac.WebApi2.3.4.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
     </Reference>
+    <Reference Include="FluentValidation">
+      <HintPath>..\packages\FluentValidation.5.6.2.0\lib\Net45\FluentValidation.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentValidation.WebApi">
+      <HintPath>..\packages\FluentValidation.WebAPI.5.6.2.0\lib\Net45\FluentValidation.WebApi.dll</HintPath>
+    </Reference>
     <Reference Include="Iesi.Collections">
       <HintPath>..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
     </Reference>
@@ -91,6 +97,7 @@
     <Compile Include="Messages\Events\LeadUpdated.cs" />
     <Compile Include="Messages\Projections\LeadDetail.cs" />
     <Compile Include="Messages\Queries\GetLeadById.cs" />
+    <Compile Include="Messages\Queries\GetLeads.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

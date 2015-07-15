@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using TechTalk.SpecFlow;
 using Xunit;
 
@@ -18,6 +19,12 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
         {
             var lastCreatedId = ScenarioContext.Current.GetLastPostResponseAggregateId();
             Assert.NotEqual(default(Guid), lastCreatedId);
+        }
+
+        [Then(@"a (.*) is returned")]
+        public void ThenTheStatusIsReturned(HttpStatusCode code)
+        {
+            Assert.Equal(code, ScenarioContext.Current.GetLastResponseStatusCode());
         }
     }
 }

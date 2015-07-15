@@ -17,6 +17,13 @@ Scenario: Continue to add to a lead
 	Then a SalesAdmin user can retrieve the lead
 	And LeadUpdated event is raised
 
+Scenario: Attempt to Create a lead without a name
+	Given an anonymous user using the api
+	When they submit their contact details with no name
+	Then a BadRequest is returned
+	And no leads are created
+	And no events are raised
+
 #
 #
 #Scenario: Delete A non existant Lead

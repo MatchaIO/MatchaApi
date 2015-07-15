@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -15,15 +16,28 @@ namespace Matcha.WebApi.Controllers
         private readonly ICommandHandler<CreateLeadCommand, Guid> _createLead;
         private readonly ICommandHandler<UpdateLeadCommand, Guid> _updateLead;
         private readonly IQueryHandler<GetLeadById, LeadDetail> _getLead;
-
+        private readonly IQueryHandler<GetLeads, IEnumerable<LeadDetail>> _getLeads;
+        
         public LeadsController(
             ICommandHandler<CreateLeadCommand, Guid> createLead,
             ICommandHandler<UpdateLeadCommand, Guid> updateLead,
-            IQueryHandler<GetLeadById, LeadDetail> getLead)
+            IQueryHandler<GetLeadById, LeadDetail> getLead, 
+            IQueryHandler<GetLeads, IEnumerable<LeadDetail>> getLeads)
         {
             _createLead = createLead;
             _getLead = getLead;
+            _getLeads = getLeads;
             _updateLead = updateLead;
+        }
+
+        /// <summary>
+        /// Gets all leads. Restricted to users with sales permssions 
+        /// </summary>
+        /// <returns></returns>
+        [Route("api/leads/")]
+        public IEnumerable<LeadDetail> Get()
+        {
+            return _getLeads.Handle(new GetLeads());//TODO should at least consider batching?
         }
 
         /// <summary>
@@ -31,7 +45,7 @@ namespace Matcha.WebApi.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-       // [Route("api/leads/{id}")]
+        [Route("api/leads/{id}")]
         public LeadDetail Get(Guid id)
         {
             return _getLead.Handle(new GetLeadById(id));
@@ -42,9 +56,18 @@ namespace Matcha.WebApi.Controllers
         /// Raises <see cref="LeadCreated"/>. 
         /// </summary>
         /// <param name="lead"></param>
-       // [Route("api/leads")]
+        [Route("api/leads")]
         public HttpResponseMessage Post([FromBody]CreateLeadCommand lead)
         {
+            if (!ModelState.IsValid)//TODO move to a filter
+            {
+                throw new HttpResponseException(
+                    new HttpResponseMessage
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        ReasonPhrase = "Validation failed."
+                    });
+            }
             var newId = _createLead.Handle(lead);
             var response = Request.CreateResponse(HttpStatusCode.Created, newId);
             //Assuming we are following std rest resourcing (ie POST to /X/ and GET from /X/{id})
@@ -58,7 +81,7 @@ namespace Matcha.WebApi.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <param name="lead"></param>
-     //   [Route("api/leads/{id}")]
+        [Route("api/leads/{id}")]
         public HttpResponseMessage Put(Guid id, [FromBody]UpdateLeadCommand lead)
         {
             lead.Id = id;
