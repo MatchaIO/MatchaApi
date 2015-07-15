@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Matcha.WebApi.Domain.DataAccess;
 using Matcha.WebApi.Domain.Models;
 using Matcha.WebApi.Messages.Commands;
@@ -11,7 +13,8 @@ namespace Matcha.WebApi.Handlers
     public class LeadHandler :
         ICommandHandler<CreateLeadCommand, Guid>,
         ICommandHandler<UpdateLeadCommand, Guid>,
-        IQueryHandler<GetLeadById, LeadDetail>
+        IQueryHandler<GetLeadById, LeadDetail>,
+        IQueryHandler<GetLeads, IEnumerable<LeadDetail>>
     {
         private readonly ILeadRepository _repository;
         private readonly IEventPublisher _eventPublisher;
@@ -63,6 +66,16 @@ namespace Matcha.WebApi.Handlers
                 Id = lead.Id,
                 ContactDetails = lead.ContactDetails
             };
+        }
+
+        public IEnumerable<LeadDetail> Handle(GetLeads message)
+        {
+            return _repository.GetAllCurrentLeads()
+                .Select(lead => new LeadDetail
+                                    {
+                                        Id = lead.Id,
+                                        ContactDetails = lead.ContactDetails
+                                    });
         }
     }
 }

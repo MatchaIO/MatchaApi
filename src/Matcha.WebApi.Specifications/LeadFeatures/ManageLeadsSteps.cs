@@ -1,9 +1,12 @@
-﻿using ExpectedObjects;
+﻿using System;
+using System.Net.Http;
+using ExpectedObjects;
 using Matcha.WebApi.Messages.Commands;
 using Matcha.WebApi.Messages.Events;
 using Matcha.WebApi.Messages.Projections;
 using Ploeh.AutoFixture;
 using TechTalk.SpecFlow;
+using Xunit;
 
 namespace Matcha.WebApi.Specifications.LeadFeatures
 {
@@ -25,6 +28,15 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
         public void WhenTheySubmitTheirContactDetails()
         {
             _createLeadCmd = Auto.Create<CreateLeadCommand>();
+            _matcha.Post("/api/leads", _createLeadCmd);
+        }
+
+        [When(@"they submit their contact details with no name")]
+        public void WhenTheySubmitTheirContactDetailsWithNoName()
+        {
+            _createLeadCmd = Auto.Build<CreateLeadCommand>().Create();
+            _createLeadCmd.ContactDetails.ContactName = null;
+            _createLeadCmd.ContactDetails.OrganiastionName = null;
             _matcha.Post("/api/leads", _createLeadCmd);
         }
 
@@ -77,6 +89,22 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
                     Id = ScenarioContext.Current.GetLastPostResponseAggregateId(),
                     _updateLeadCmd.ContactDetails
                 });
+        }
+
+        [Then(@"no (.*) are created")]
+        public void NoEntityIsCreated(string entitytype)
+        {
+            var response = _matcha.HttpClient.GetAsync("api/" + entitytype).Result; //TODO no GET ALL exists!!!!
+            response.EnsureSuccessStatusCode();
+            ScenarioContext.Current.SetLastResponse(response);
+            Assert.Empty(response.Content.ReadAsAsync<object[]>().Result);
+        }
+
+        [Then(@"no events are raised")]
+        public void AndNoEventIsRaised()
+        {
+            Assert.Null(_matcha.GetLastEventOfType<LeadUpdated>());
+            Assert.Null(_matcha.GetLastEventOfType<LeadCreated>());
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using Autofac;
+using Matcha.WebApi.Handlers;
 using Matcha.WebApi.Specifications.LeadFeatures;
 using Microsoft.Owin.Testing;
 using NHibernate;
@@ -14,7 +15,7 @@ namespace Matcha.WebApi.Specifications
     {
         private readonly TestServer _server;
 
-        private HttpClient HttpClient
+        internal HttpClient HttpClient
         {
             get
             {
@@ -42,19 +43,19 @@ namespace Matcha.WebApi.Specifications
 
         public void Post<TRequest>(string urlPath, TRequest request)
         {
-             var postResponse = HttpClient.PostAsJsonAsync(
-                urlPath,
-                request).Result;
-            postResponse.EnsureSuccessStatusCode();
+            var postResponse = HttpClient.PostAsJsonAsync(
+               urlPath,
+               request).Result;
+            ScenarioContext.Current.SetLastResponse(postResponse);
             ScenarioContext.Current.SetLastPostHeaders(postResponse.Headers);
         }
 
         public void Put<TRequest>(string urlPath, TRequest request)
         {
-            var postResponse = HttpClient.PutAsJsonAsync(
+            var putResponse = HttpClient.PutAsJsonAsync(
                 urlPath,
                 request).Result;
-            postResponse.EnsureSuccessStatusCode();
+            ScenarioContext.Current.SetLastResponse(putResponse);
         }
 
         public T Get<T>(Uri urlPath)
@@ -66,15 +67,16 @@ namespace Matcha.WebApi.Specifications
         {
             var response = HttpClient.GetAsync(urlPath).Result;
             response.EnsureSuccessStatusCode();
+            ScenarioContext.Current.SetLastResponse(response);
             return response.Content.ReadAsAsync<T>().Result;
         }
 
-        public T GetLastEventOfType<T>()
+        public T GetLastEventOfType<T>() where T : Event
         {
             var requestUri = "api/Events/ByType/" + typeof(T).Name;
             var getResponse = HttpClient.GetAsync(requestUri).Result;
             getResponse.EnsureSuccessStatusCode();
-            return getResponse.Content.ReadAsAsync<T[]>().Result.Last();
+            return getResponse.Content.ReadAsAsync<T[]>().Result.LastOrDefault();
         }
     }
 }
