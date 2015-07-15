@@ -59,15 +59,6 @@ namespace Matcha.WebApi.Controllers
         [Route("api/leads")]
         public HttpResponseMessage Post([FromBody]CreateLeadCommand lead)
         {
-            if (!ModelState.IsValid)//TODO move to a filter
-            {
-                throw new HttpResponseException(
-                    new HttpResponseMessage
-                    {
-                        StatusCode = HttpStatusCode.BadRequest,
-                        ReasonPhrase = "Validation failed."
-                    });
-            }
             var newId = _createLead.Handle(lead);
             var response = Request.CreateResponse(HttpStatusCode.Created, newId);
             //Assuming we are following std rest resourcing (ie POST to /X/ and GET from /X/{id})
