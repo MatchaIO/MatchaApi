@@ -24,6 +24,27 @@ Scenario: Attempt to Create a lead without a name
 	And no leads are created
 	And no events are raised
 
+Scenario: Attempt to Create a lead without a contact
+	Given an anonymous user using the api
+	When they submit their contact details with no contact
+	Then a BadRequest is returned
+	And no leads are created
+	And no events are raised
+
+Scenario: Attempt to Update a lead without a contact
+	Given an anonymous user using the api
+	And they have submited their contact details
+	When they modify their contact details with no contact
+	Then a BadRequest is returned
+	And no UpdateLead event is raised
+
+Scenario: Attempt to Update a lead without a name
+	Given an anonymous user using the api
+	And they have submited their contact details
+	When they modify their contact details with no name
+	Then a BadRequest is returned
+	And no UpdateLead event is raised
+
 #
 #
 #Scenario: Delete A non existant Lead

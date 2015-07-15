@@ -2,6 +2,7 @@
 using System.Net.Http;
 using ExpectedObjects;
 using Matcha.WebApi.Messages.Commands;
+using Matcha.WebApi.Messages.Dtos;
 using Matcha.WebApi.Messages.Events;
 using Matcha.WebApi.Messages.Projections;
 using Ploeh.AutoFixture;
@@ -40,11 +41,38 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
             _matcha.Post("/api/leads", _createLeadCmd);
         }
 
+        [When(@"they submit their contact details with no contact")]
+        public void WhenTheySubmitTheirContactDetailsWithNoContact()
+        {
+            _createLeadCmd = Auto.Build<CreateLeadCommand>().Create();
+            _createLeadCmd.ContactDetails.Contacts = new Contact[] { };
+            _matcha.Post("/api/leads", _createLeadCmd);
+        }
+
         [When(@"they modify their contact details")]
         public void WhenTheyModifyTheirContactDetails()
         {
             var leadId = ScenarioContext.Current.GetLastPostResponseAggregateId();
             _updateLeadCmd = Auto.Build<UpdateLeadCommand>().With(cmd => cmd.Id, leadId).Create();
+            _matcha.Put(ScenarioContext.Current.GetLastPostResponseHeaderLocation(), _updateLeadCmd);
+        }
+
+        [When(@"they modify their contact details with no name")]
+        public void WhenTheyModifyTheirContactDetailsWithNoName()
+        {
+            var leadId = ScenarioContext.Current.GetLastPostResponseAggregateId();
+            _updateLeadCmd = Auto.Build<UpdateLeadCommand>().With(cmd => cmd.Id, leadId).Create();
+            _updateLeadCmd.ContactDetails.ContactName = null;
+            _updateLeadCmd.ContactDetails.OrganiastionName = null;
+            _matcha.Put(ScenarioContext.Current.GetLastPostResponseHeaderLocation(), _updateLeadCmd);
+        }
+        
+        [When(@"they modify their contact details with no contact")]
+        public void WhenTheyModifyTheirContactDetailsWithNoContact()
+        {
+            var leadId = ScenarioContext.Current.GetLastPostResponseAggregateId();
+            _updateLeadCmd = Auto.Build<UpdateLeadCommand>().With(cmd => cmd.Id, leadId).Create();
+            _updateLeadCmd.ContactDetails.Contacts = new Contact[]{};
             _matcha.Put(ScenarioContext.Current.GetLastPostResponseHeaderLocation(), _updateLeadCmd);
         }
 
@@ -94,7 +122,7 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
         [Then(@"no (.*) are created")]
         public void NoEntityIsCreated(string entitytype)
         {
-            var response = _matcha.HttpClient.GetAsync("api/" + entitytype).Result; //TODO no GET ALL exists!!!!
+            var response = _matcha.HttpClient.GetAsync("api/" + entitytype).Result; 
             response.EnsureSuccessStatusCode();
             ScenarioContext.Current.SetLastResponse(response);
             Assert.Empty(response.Content.ReadAsAsync<object[]>().Result);
@@ -105,6 +133,12 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
         {
             Assert.Null(_matcha.GetLastEventOfType<LeadUpdated>());
             Assert.Null(_matcha.GetLastEventOfType<LeadCreated>());
+        }
+
+        [Then(@"no UpdateLead event is raised")]
+        public void AndNoUpdateLeadEventIsRaised()
+        {
+            Assert.Null(_matcha.GetLastEventOfType<LeadUpdated>());
         }
     }
 }

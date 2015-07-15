@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using System.Web.Http;
 using FluentValidation.WebApi;
+using Matcha.WebApi.Filters;
 using Newtonsoft.Json.Serialization;
 
 namespace Matcha.WebApi.Config
@@ -21,6 +22,9 @@ namespace Matcha.WebApi.Config
             // Web API routes
             config.MapHttpAttributeRoutes();
 
+            //Filters
+            config.Filters.Add(new ValidateModelAttribute());
+            
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
