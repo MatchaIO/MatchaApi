@@ -17,6 +17,7 @@ TestResults
 [Dd]ebug/
 [Rr]elease/
 [Bb]uild/
+[Bb]uild[Oo]utput/
 *_i.c
 *_p.c
 *.ilk
