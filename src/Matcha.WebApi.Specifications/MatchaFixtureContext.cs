@@ -57,6 +57,12 @@ namespace Matcha.WebApi.Specifications
                 request).Result;
             ScenarioContext.Current.SetLastResponse(putResponse);
         }
+        
+        public void Delete(string urlPath)
+        {
+            var putResponse = HttpClient.DeleteAsync(urlPath).Result;
+            ScenarioContext.Current.SetLastResponse(putResponse);
+        }
 
         public T Get<T>(Uri urlPath)
         {
@@ -78,5 +84,7 @@ namespace Matcha.WebApi.Specifications
             getResponse.EnsureSuccessStatusCode();
             return getResponse.Content.ReadAsAsync<T[]>().Result.LastOrDefault();
         }
+
+        
     }
 }

@@ -26,6 +26,7 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
 
         [Given(@"they have submited their contact details")]
         [When(@"they submit their contact details")]
+        [Given(@"a valid Lead exists")]
         public void WhenTheySubmitTheirContactDetails()
         {
             _createLeadCmd = Auto.Create<CreateLeadCommand>();
@@ -75,6 +76,14 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
             _updateLeadCmd.ContactDetails.Contacts = new Contact[]{};
             _matcha.Put(ScenarioContext.Current.GetLastPostResponseHeaderLocation(), _updateLeadCmd);
         }
+
+
+        [When(@"a delete command is made with an invalid id,")]
+        public void WhenADeleteCommandIsMadeWithAnInvalidId()
+        {
+            _matcha.Delete("/api/leads/" + Guid.NewGuid());
+        }
+
 
         [Then(@"a SalesAdmin user can retrieve the lead")]
         public void ThenASalesAdminUserCanRetrieveTheLead()
@@ -139,6 +148,12 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
         public void AndNoUpdateLeadEventIsRaised()
         {
             Assert.Null(_matcha.GetLastEventOfType<LeadUpdated>());
+        }
+        
+        [Then(@"no DeleteLead event is raised")]
+        public void ThenNoDeleteLeadEventIsRaised()
+        {
+            Assert.Null(_matcha.GetLastEventOfType<LeadDeleted>());
         }
     }
 }

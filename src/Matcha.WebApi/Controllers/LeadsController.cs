@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Matcha.WebApi.Domain.DataAccess;
 using Matcha.WebApi.Handlers;
 using Matcha.WebApi.Messages.Commands;
 using Matcha.WebApi.Messages.Events;
@@ -13,20 +14,23 @@ namespace Matcha.WebApi.Controllers
 {
     public class LeadsController : ApiController
     {
-        private readonly ICommandHandler<CreateLeadCommand, Guid> _createLead;
-        private readonly ICommandHandler<UpdateLeadCommand, Guid> _updateLead;
+        private readonly ICommandHandler<CreateLeadCommand, LeadDetail> _createLead;
+        private readonly ICommandHandler<UpdateLeadCommand, LeadDetail> _updateLead;
+        private readonly ICommandHandler<DeleteLeadCommand, Guid> _deleteLead;
         private readonly IQueryHandler<GetLeadById, LeadDetail> _getLead;
         private readonly IQueryHandler<GetLeads, IEnumerable<LeadDetail>> _getLeads;
         
         public LeadsController(
-            ICommandHandler<CreateLeadCommand, Guid> createLead,
-            ICommandHandler<UpdateLeadCommand, Guid> updateLead,
+            ICommandHandler<CreateLeadCommand, LeadDetail> createLead,
+            ICommandHandler<UpdateLeadCommand, LeadDetail> updateLead,
+            ICommandHandler<DeleteLeadCommand, Guid> deleteLead,
             IQueryHandler<GetLeadById, LeadDetail> getLead, 
             IQueryHandler<GetLeads, IEnumerable<LeadDetail>> getLeads)
         {
             _createLead = createLead;
             _getLead = getLead;
             _getLeads = getLeads;
+            _deleteLead = deleteLead;
             _updateLead = updateLead;
         }
 
@@ -59,10 +63,10 @@ namespace Matcha.WebApi.Controllers
         [Route("api/leads")]
         public HttpResponseMessage Post([FromBody]CreateLeadCommand lead)
         {
-            var newId = _createLead.Handle(lead);
-            var response = Request.CreateResponse(HttpStatusCode.Created, newId);
+            var newLead = _createLead.Handle(lead);
+            var response = Request.CreateResponse(HttpStatusCode.Created, newLead);
             //Assuming we are following std rest resourcing (ie POST to /X/ and GET from /X/{id})
-            response.Headers.Location = Request.RequestUri.Combine(newId);
+            response.Headers.Location = Request.RequestUri.Combine(newLead.Id);
             return response;
         }
 
@@ -76,10 +80,31 @@ namespace Matcha.WebApi.Controllers
         public HttpResponseMessage Put(Guid id, [FromBody]UpdateLeadCommand lead)
         {
             lead.Id = id;
-            _updateLead.Handle(lead);
-            var response = Request.CreateResponse(HttpStatusCode.Accepted, id);
+            var updatedLead = _updateLead.Handle(lead);
+            var response = Request.CreateResponse(HttpStatusCode.OK, updatedLead);
             response.Headers.Location = Request.RequestUri;
             return response;
+        }
+
+        /// <summary>
+        /// Deletes the sales lead 
+        /// Raises <see cref="LeadDeleted"/>. 
+        /// </summary>
+        /// <param name="id"></param>
+        [Route("api/leads/{id}")]
+        public HttpResponseMessage Delete(Guid id)
+        {
+            try
+            {
+                var cmd = new DeleteLeadCommand { Id = id };
+                _deleteLead.Handle(cmd);
+                return Request.CreateResponse(HttpStatusCode.NoContent);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                //TODO log
+                return Request.CreateResponse(HttpStatusCode.NotFound);
+            }
         }
     }
 }

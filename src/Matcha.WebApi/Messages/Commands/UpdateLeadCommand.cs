@@ -4,11 +4,12 @@ using FluentValidation.Attributes;
 using Matcha.WebApi.Handlers;
 using Matcha.WebApi.Messages.Dtos;
 using Matcha.WebApi.Messages.Dtos.Validators;
+using Matcha.WebApi.Messages.Projections;
 
 namespace Matcha.WebApi.Messages.Commands
 {
     [Validator(typeof(UpdateLeadCommandValidator))]
-    public class UpdateLeadCommand : ICommand<Guid>
+    public class UpdateLeadCommand : ICommand<LeadDetail>
     {
         public Guid Id { get; set; }
         public ContactDetails ContactDetails { get; set; }

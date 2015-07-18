@@ -11,8 +11,9 @@ using Matcha.WebApi.Messages.Queries;
 namespace Matcha.WebApi.Handlers
 {
     public class LeadHandler :
-        ICommandHandler<CreateLeadCommand, Guid>,
-        ICommandHandler<UpdateLeadCommand, Guid>,
+        ICommandHandler<CreateLeadCommand, LeadDetail>,
+        ICommandHandler<UpdateLeadCommand, LeadDetail>,
+        ICommandHandler<DeleteLeadCommand, Guid>,
         IQueryHandler<GetLeadById, LeadDetail>,
         IQueryHandler<GetLeads, IEnumerable<LeadDetail>>
     {
@@ -25,7 +26,7 @@ namespace Matcha.WebApi.Handlers
             _eventPublisher = eventPublisher;
         }
 
-        public Guid Handle(CreateLeadCommand message)
+        public LeadDetail Handle(CreateLeadCommand message)
         {
             var @event = new LeadCreated
             {
@@ -38,10 +39,10 @@ namespace Matcha.WebApi.Handlers
             var lead = new Lead(@event);
             _repository.Store(lead);
             _eventPublisher.Publish(@event);
-            return lead.Id;
+            return MapToLeadDetail(lead);
         }
 
-        public Guid Handle(UpdateLeadCommand message)
+        public LeadDetail Handle(UpdateLeadCommand message)
         {
             var @event = new LeadUpdated
             {
@@ -55,12 +56,24 @@ namespace Matcha.WebApi.Handlers
             lead.Update(@event);
             _repository.Store(lead);
             _eventPublisher.Publish(@event);
-            return lead.Id;
+            return MapToLeadDetail(lead);
+        }
+
+        public Guid Handle(DeleteLeadCommand message)
+        {
+            var lead = _repository.GetLeadById(message.Id);
+            _repository.Delete(lead);
+            return message.Id;
         }
 
         public LeadDetail Handle(GetLeadById message)
         {
             var lead = _repository.GetLeadById(message.Id);
+            return MapToLeadDetail(lead);
+        }
+
+        private static LeadDetail MapToLeadDetail(Lead lead)
+        {
             return new LeadDetail
             {
                 Id = lead.Id,

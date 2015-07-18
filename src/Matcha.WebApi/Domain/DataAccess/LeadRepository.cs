@@ -25,6 +25,11 @@ namespace Matcha.WebApi.Domain.DataAccess
             return lead;
         }
 
+        public void Delete(Lead lead)
+        {
+            _session.Delete(lead);
+        }
+
         public IEnumerable<Lead> GetAllCurrentLeads()
         {
             return _session.Query<Lead>().Where(IsValid);
