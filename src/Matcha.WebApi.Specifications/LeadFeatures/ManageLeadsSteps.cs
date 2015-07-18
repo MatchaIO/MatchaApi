@@ -37,6 +37,15 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
             _matcha.Post("/api/leads", _createLeadCmd);
         }
 
+        [Given(@"a Lead has been previously deleted")]
+        public void GivenLeadHasBeenPreviouslyDeleted()
+        {
+            _createLeadCmd = Auto.Build<CreateLeadCommand>().Create();
+            _matcha.Post("/api/leads", _createLeadCmd);
+            _matcha.Delete(ScenarioContext.Current.GetLastResponseHeaderLocation(HttpMethod.Post));
+            _matcha.IgnoreAllPriorEvents();
+        }
+        
         [When(@"they submit their contact details with no name")]
         public void WhenTheySubmitTheirContactDetailsWithNoName()
         {
@@ -162,10 +171,12 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
         [Then(@"no DeleteLead event is raised")]
         public void ThenNoDeleteLeadEventIsRaised()
         {
-            Assert.Null(_matcha.GetLastEventOfType<LeadDeleted>());
+            var deletedId = ScenarioContext.Current.GetLastResponseAggregateId(HttpMethod.Post);
+            var deletesEvents = _matcha.GetEventsOfType<LeadDeleted>();
+            Assert.Empty(deletesEvents);
         }
 
-        [Then(@"the lead can no longer be retrieved by id")]
+        [Then(@"the lead can not be retrieved by id")]
         public void ThenTheLeadCanNoLongerBeRetrievedById()
         {
             var response = _matcha.Get(ScenarioContext.Current.GetLastResponseHeaderLocation(HttpMethod.Post));
@@ -180,8 +191,8 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
             Assert.DoesNotContain(deletedId, leadIds);
         }
 
-        [Then(@"LeadWithdrawn event is raised")]
-        public void ThenLeadWithdrawnEventIsRaised()
+        [Then(@"DeleteLead event is raised")]
+        public void ThenLeadDeletedEventIsRaised()
         {
             var deleteEvent = _matcha.GetLastEventOfType<LeadDeleted>();
             Assert.NotNull(deleteEvent);

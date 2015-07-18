@@ -21,5 +21,10 @@ namespace Matcha.WebApi.Handlers
         {
             return _publishedEvents.Where(e => e.GetType().Name == eventType);
         }
+
+        public IEnumerable<Event> GetAll()
+        {
+            return _publishedEvents;
+        }
     }
 }

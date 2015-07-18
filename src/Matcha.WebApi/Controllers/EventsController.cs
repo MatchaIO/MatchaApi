@@ -18,5 +18,10 @@ namespace Matcha.WebApi.Controllers
         {
             return _eventRepository.EventsOfType(eventType);//TODO - this is retarded - dont send the whole event store over the wire
         }
+        [Route("api/Events/")]
+        public IEnumerable<Event> GetAll()
+        {
+            return _eventRepository.GetAll();//TODO - this is retarded - dont send the whole event store over the wire
+        }
     }
 }
