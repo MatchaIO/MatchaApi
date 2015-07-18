@@ -55,7 +55,7 @@ Scenario: Delete A non existant Lead
       
 #
 #
-#Scenario: Delete A Lead
+#Scenario: Delete A deleted Lead
 #	Given a sales user is logged on
 #	And a Lead has been previously deleted
 #	When a delete command is made for that lead
@@ -63,12 +63,14 @@ Scenario: Delete A non existant Lead
 #	Then no Event is raised
 #	And the lead is still deleted
 #
-#Scenario: Delete A deleted Lead
-#	Given a valid Lead
-#	When it is deleted
-#	Then LeadWithdrawn event is raised
-#	And the lead can no longer be retrieved by id
-#	And the lead does not appear in the lead list
+Scenario: Delete A Lead
+	Given an sales user using the api
+	And a valid Lead exists
+	When a delete command is made with the lead id,
+	Then a NoContent is returned
+	And the lead can no longer be retrieved by id
+	And the lead does not appear in the lead list
+	And LeadWithdrawn event is raised
 #
 #
 #Scenario: Update a Lead

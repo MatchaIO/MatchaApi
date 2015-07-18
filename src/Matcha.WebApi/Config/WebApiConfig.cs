@@ -24,6 +24,7 @@ namespace Matcha.WebApi.Config
 
             //Filters
             config.Filters.Add(new ValidateModelAttribute());
+            config.Filters.Add(new EntityNotFoundExceptionAttribute());
             
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",

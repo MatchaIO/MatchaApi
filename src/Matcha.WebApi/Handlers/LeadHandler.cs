@@ -61,8 +61,10 @@ namespace Matcha.WebApi.Handlers
 
         public Guid Handle(DeleteLeadCommand message)
         {
+            var @event = new LeadDeleted {Id = message.Id};
             var lead = _repository.GetLeadById(message.Id);
             _repository.Delete(lead);
+            _eventPublisher.Publish(@event);
             return message.Id;
         }
 

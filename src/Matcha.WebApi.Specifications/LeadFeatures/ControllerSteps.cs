@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Net.Http;
 using TechTalk.SpecFlow;
 using Xunit;
 
@@ -32,7 +33,7 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
         [Then(@"the new Id is returned")]
         public void ThenTheIdIsReturned()
         {
-            var lastCreatedId = ScenarioContext.Current.GetLastPostResponseAggregateId();
+            var lastCreatedId = ScenarioContext.Current.GetLastResponseAggregateId(HttpMethod.Post);
             Assert.NotEqual(default(Guid), lastCreatedId);
         }
 

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using Matcha.WebApi.Domain.DataAccess;
 using Matcha.WebApi.Handlers;
 using Matcha.WebApi.Messages.Commands;
 using Matcha.WebApi.Messages.Events;
@@ -19,12 +18,12 @@ namespace Matcha.WebApi.Controllers
         private readonly ICommandHandler<DeleteLeadCommand, Guid> _deleteLead;
         private readonly IQueryHandler<GetLeadById, LeadDetail> _getLead;
         private readonly IQueryHandler<GetLeads, IEnumerable<LeadDetail>> _getLeads;
-        
+
         public LeadsController(
             ICommandHandler<CreateLeadCommand, LeadDetail> createLead,
             ICommandHandler<UpdateLeadCommand, LeadDetail> updateLead,
             ICommandHandler<DeleteLeadCommand, Guid> deleteLead,
-            IQueryHandler<GetLeadById, LeadDetail> getLead, 
+            IQueryHandler<GetLeadById, LeadDetail> getLead,
             IQueryHandler<GetLeads, IEnumerable<LeadDetail>> getLeads)
         {
             _createLead = createLead;
@@ -94,17 +93,9 @@ namespace Matcha.WebApi.Controllers
         [Route("api/leads/{id}")]
         public HttpResponseMessage Delete(Guid id)
         {
-            try
-            {
-                var cmd = new DeleteLeadCommand { Id = id };
-                _deleteLead.Handle(cmd);
-                return Request.CreateResponse(HttpStatusCode.NoContent);
-            }
-            catch (EntityNotFoundException ex)
-            {
-                //TODO log
-                return Request.CreateResponse(HttpStatusCode.NotFound);
-            }
+            var cmd = new DeleteLeadCommand { Id = id };
+            _deleteLead.Handle(cmd);
+            return Request.CreateResponse(HttpStatusCode.NoContent);
         }
     }
 }

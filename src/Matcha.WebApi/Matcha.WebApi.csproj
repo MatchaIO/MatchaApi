@@ -90,6 +90,7 @@
     <Compile Include="Domain\Models\Guard.cs" />
     <Compile Include="Domain\Models\JsonSerialisedData.cs" />
     <Compile Include="Domain\Models\Lead.cs" />
+    <Compile Include="Filters\EntityNotFoundExceptionAttribute.cs" />
     <Compile Include="Filters\ValidateModelAttribute.cs" />
     <Compile Include="Handlers\Class1.cs" />
     <Compile Include="Handlers\InMemoryEventPublisher.cs" />

@@ -47,7 +47,6 @@ namespace Matcha.WebApi.Specifications
                urlPath,
                request).Result;
             ScenarioContext.Current.SetLastResponse(postResponse);
-            ScenarioContext.Current.SetLastPostHeaders(postResponse.Headers);
         }
 
         public void Put<TRequest>(string urlPath, TRequest request)
@@ -76,6 +75,13 @@ namespace Matcha.WebApi.Specifications
             ScenarioContext.Current.SetLastResponse(response);
             return response.Content.ReadAsAsync<T>().Result;
         }
+            
+        public HttpResponseMessage Get(string urlPath)
+        {
+            return HttpClient.GetAsync(urlPath).Result;
+        }
+
+
 
         public T GetLastEventOfType<T>() where T : Event
         {
