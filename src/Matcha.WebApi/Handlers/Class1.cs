@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Matcha.WebApi.Handlers
 {
-    public abstract class Event
+    public class Event
     {
         protected Event()
         {
@@ -22,6 +22,7 @@ namespace Matcha.WebApi.Handlers
     public interface IEventRepository
     {
         IEnumerable<Event> EventsOfType(string eventType);
+        IEnumerable<Event> GetAll();
     }
     public interface ICommandHandler<in TCommand, out TResponse>
         where TCommand : ICommand<TResponse>

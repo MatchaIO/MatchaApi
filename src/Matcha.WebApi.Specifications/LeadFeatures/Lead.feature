@@ -45,31 +45,30 @@ Scenario: Attempt to Update a lead without a name
 	Then a BadRequest is returned
 	And no UpdateLead event is raised
 
-#
-#
-#Scenario: Delete A non existant Lead
-#	Given a sales user is logged on
-#	And a valid Lead exists
-#	When a delete command is made with an invalid id,
-#	Then a 404 returned
-#	And no Event is raised
-#	And the other Lead is not deleted
-#
-#
-#Scenario: Delete A Lead
-#	Given a sales user is logged on
-#	And a Lead has been previously deleted
-#	When a delete command is made for that lead
-#	Then a 404 is returned
-#	Then no Event is raised
-#	And the lead is still deleted
-#
-#Scenario: Delete A deleted Lead
-#	Given a valid Lead
-#	When it is deleted
-#	Then LeadWithdrawn event is raised
-#	And the lead can no longer be retrieved by id
-#	And the lead does not appear in the lead list
+Scenario: Delete A non existant Lead
+	Given an sales user using the api
+	And a valid Lead exists
+	When a delete command is made with an invalid id,
+	Then a NotFound is returned
+	And no DeleteLead event is raised
+	And a SalesAdmin user can retrieve the lead
+
+Scenario: Delete A deleted Lead
+	Given an sales user using the api
+	And a Lead has been previously deleted
+	When a delete command is made with the lead id,
+	Then a NotFound is returned
+	And no DeleteLead event is raised
+	And the lead can not be retrieved by id
+
+Scenario: Delete A Lead
+	Given an sales user using the api
+	And a valid Lead exists
+	When a delete command is made with the lead id,
+	Then a NoContent is returned
+	And the lead can not be retrieved by id
+	And the lead does not appear in the lead list
+	And DeleteLead event is raised
 #
 #
 #Scenario: Update a Lead

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using Autofac;
@@ -14,6 +15,7 @@ namespace Matcha.WebApi.Specifications
     public class MatchaFixtureContext
     {
         private readonly TestServer _server;
+        private Guid[] _eventIdsToIgnore = new Guid[0];
 
         internal HttpClient HttpClient
         {
@@ -47,7 +49,6 @@ namespace Matcha.WebApi.Specifications
                urlPath,
                request).Result;
             ScenarioContext.Current.SetLastResponse(postResponse);
-            ScenarioContext.Current.SetLastPostHeaders(postResponse.Headers);
         }
 
         public void Put<TRequest>(string urlPath, TRequest request)
@@ -55,6 +56,12 @@ namespace Matcha.WebApi.Specifications
             var putResponse = HttpClient.PutAsJsonAsync(
                 urlPath,
                 request).Result;
+            ScenarioContext.Current.SetLastResponse(putResponse);
+        }
+
+        public void Delete(string urlPath)
+        {
+            var putResponse = HttpClient.DeleteAsync(urlPath).Result;
             ScenarioContext.Current.SetLastResponse(putResponse);
         }
 
@@ -71,12 +78,31 @@ namespace Matcha.WebApi.Specifications
             return response.Content.ReadAsAsync<T>().Result;
         }
 
+        public HttpResponseMessage Get(string urlPath)
+        {
+            return HttpClient.GetAsync(urlPath).Result;
+        }
+        
         public T GetLastEventOfType<T>() where T : Event
+        {
+            return GetEventsOfType<T>().LastOrDefault();
+        }
+
+        public IEnumerable<T> GetEventsOfType<T>() where T : Event
         {
             var requestUri = "api/Events/ByType/" + typeof(T).Name;
             var getResponse = HttpClient.GetAsync(requestUri).Result;
             getResponse.EnsureSuccessStatusCode();
-            return getResponse.Content.ReadAsAsync<T[]>().Result.LastOrDefault();
+            return getResponse.Content.ReadAsAsync<T[]>()
+                .Result
+                .Where(e => !_eventIdsToIgnore.Contains(e.EventId));
+        }
+        
+        public void IgnoreAllPriorEvents()
+        {
+            var getResponse = HttpClient.GetAsync("api/Events/").Result;
+            getResponse.EnsureSuccessStatusCode();
+            _eventIdsToIgnore = getResponse.Content.ReadAsAsync<Event[]>().Result.Select(e => e.EventId).ToArray();
         }
     }
 }

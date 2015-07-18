@@ -205,6 +205,80 @@ this.ScenarioSetup(scenarioInfo);
             this.ScenarioCleanup();
         }
         
+        [Xunit.FactAttribute()]
+        [Xunit.TraitAttribute("FeatureTitle", "Manage Leads")]
+        [Xunit.TraitAttribute("Description", "Delete A non existant Lead")]
+        public virtual void DeleteANonExistantLead()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Delete A non existant Lead", ((string[])(null)));
+#line 48
+this.ScenarioSetup(scenarioInfo);
+#line 49
+ testRunner.Given("an sales user using the api", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 50
+ testRunner.And("a valid Lead exists", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 51
+ testRunner.When("a delete command is made with an invalid id,", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 52
+ testRunner.Then("a NotFound is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 53
+ testRunner.And("no DeleteLead event is raised", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 54
+ testRunner.And("a SalesAdmin user can retrieve the lead", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.FactAttribute()]
+        [Xunit.TraitAttribute("FeatureTitle", "Manage Leads")]
+        [Xunit.TraitAttribute("Description", "Delete A deleted Lead")]
+        public virtual void DeleteADeletedLead()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Delete A deleted Lead", ((string[])(null)));
+#line 56
+this.ScenarioSetup(scenarioInfo);
+#line 57
+ testRunner.Given("an sales user using the api", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 58
+ testRunner.And("a Lead has been previously deleted", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 59
+ testRunner.When("a delete command is made with the lead id,", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 60
+ testRunner.Then("a NotFound is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 61
+ testRunner.And("no DeleteLead event is raised", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 62
+ testRunner.And("the lead can not be retrieved by id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.FactAttribute()]
+        [Xunit.TraitAttribute("FeatureTitle", "Manage Leads")]
+        [Xunit.TraitAttribute("Description", "Delete A Lead")]
+        public virtual void DeleteALead()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Delete A Lead", ((string[])(null)));
+#line 64
+this.ScenarioSetup(scenarioInfo);
+#line 65
+ testRunner.Given("an sales user using the api", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 66
+ testRunner.And("a valid Lead exists", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 67
+ testRunner.When("a delete command is made with the lead id,", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 68
+ testRunner.Then("a NoContent is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 69
+ testRunner.And("the lead can not be retrieved by id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 70
+ testRunner.And("the lead does not appear in the lead list", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 71
+ testRunner.And("DeleteLead event is raised", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
         [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "1.9.0.77")]
         [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
         public class FixtureData : System.IDisposable

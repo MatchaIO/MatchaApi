@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Net.Http;
 using TechTalk.SpecFlow;
 using Xunit;
 
@@ -8,16 +9,31 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
     [Binding]
     public class ControllerSteps
     {
-        [Given(@"an anonymous user using the api")]
-        public void GivenAnAnonymousUserUsingTheApi()
+        [Given(@"an (.*) user using the api")]
+        public void GivenAUserUsingTheApi(string userAsString)
         {
-            ScenarioContext.Current.SetCurrentUser(Users.Anon);
+            Users user; 
+            switch (userAsString.ToLowerInvariant())
+            {
+                case "sales":
+                    user = Users.SalesAdmin;
+                    break;
+                case "anonymous":
+                    user = Users.Anon;
+                    break;
+                case "eventsubscriber":
+                    user = Users.EventSubscriber;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            ScenarioContext.Current.SetCurrentUser(user);
         }
 
         [Then(@"the new Id is returned")]
         public void ThenTheIdIsReturned()
         {
-            var lastCreatedId = ScenarioContext.Current.GetLastPostResponseAggregateId();
+            var lastCreatedId = ScenarioContext.Current.GetLastResponseAggregateId(HttpMethod.Post);
             Assert.NotEqual(default(Guid), lastCreatedId);
         }
 
