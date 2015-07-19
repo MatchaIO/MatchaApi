@@ -28,11 +28,13 @@ namespace Matcha.WebApi.Handlers
 
         public LeadDetail Handle(CreateLeadCommand message)
         {
+            var aggregateId = Guid.NewGuid();
             var @event = new LeadCreated
             {
-                LeadDetail = new LeadDetail
+                AggregateId = aggregateId,
+                Payload = new LeadDetail
                 {
-                    Id = Guid.NewGuid(),
+                    Id = aggregateId,
                     ContactDetails = message.ContactDetails
                 }
             };
@@ -46,7 +48,8 @@ namespace Matcha.WebApi.Handlers
         {
             var @event = new LeadUpdated
             {
-                LeadDetail = new LeadDetail
+                AggregateId = message.Id,
+                Payload = new LeadDetail
                 {
                     Id = message.Id,
                     ContactDetails = message.ContactDetails
@@ -61,7 +64,7 @@ namespace Matcha.WebApi.Handlers
 
         public Guid Handle(DeleteLeadCommand message)
         {
-            var @event = new LeadDeleted {Id = message.Id};
+            var @event = new LeadDeleted(message.Id);
             var lead = _repository.GetLeadById(message.Id);
             lead.Update(@event);
             _repository.Store(lead);

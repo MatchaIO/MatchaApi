@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
+using Matcha.WebApi.Domain.Events;
 using Matcha.WebApi.Handlers;
 
 namespace Matcha.WebApi.Controllers
@@ -16,7 +18,8 @@ namespace Matcha.WebApi.Controllers
         [Route("api/Events/ByType/{eventType}")]
         public IEnumerable<Event> Get(string eventType)
         {
-            return _eventRepository.EventsOfType(eventType);//TODO - this is retarded - dont send the whole event store over the wire
+            var results =  _eventRepository.EventsOfType(eventType).ToArray();//TODO - this is retarded - dont send the whole event store over the wire
+            return results;
         }
         [Route("api/Events/")]
         public IEnumerable<Event> GetAll()

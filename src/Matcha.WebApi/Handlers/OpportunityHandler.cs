@@ -43,8 +43,9 @@ namespace Matcha.WebApi.Handlers
 
             if (message.LeadId.HasValue)
             {
-                var vettedEvent = new LeadVetted { Id = message.LeadId.Value, OpportunityId = opportunity.Id };
-                var lead = _leadRepository.GetLeadById(vettedEvent.Id);
+                var leadId = message.LeadId.Value;
+                var vettedEvent = new LeadVetted { AggregateId = leadId, Payload = new LeadVetting { LeadId = leadId, OpportunityId = opportunity.Id } };
+                var lead = _leadRepository.GetLeadById(leadId);
                 lead.Update(vettedEvent);
                 _leadRepository.Store(lead);
                 _eventPublisher.Publish(vettedEvent);

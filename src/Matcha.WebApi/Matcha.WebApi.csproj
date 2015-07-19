@@ -90,6 +90,8 @@
     <Compile Include="Domain\DataAccess\NHibenateMappingExtensions.cs" />
     <Compile Include="Domain\DataAccess\OpportunityRepository.cs" />
     <Compile Include="Domain\DataAccess\SessionHelper.cs" />
+    <Compile Include="Domain\Events\DeletePayload.cs" />
+    <Compile Include="Domain\Events\Event.cs" />
     <Compile Include="Domain\Models\Guard.cs" />
     <Compile Include="Domain\Models\JsonSerialisedData.cs" />
     <Compile Include="Domain\Models\Lead.cs" />
@@ -97,9 +99,9 @@
     <Compile Include="Filters\EntityNotFoundExceptionAttribute.cs" />
     <Compile Include="Filters\ValidateModelAttribute.cs" />
     <Compile Include="Handlers\Class1.cs" />
-    <Compile Include="Handlers\InMemoryEventPublisher.cs" />
     <Compile Include="Handlers\LeadHandler.cs" />
     <Compile Include="Handlers\OpportunityHandler.cs" />
+    <Compile Include="Domain\Events\SqlEventPublisher.cs" />
     <Compile Include="Messages\Commands\CreateLeadCommand.cs" />
     <Compile Include="Messages\Commands\CreateOpportunityCommand.cs" />
     <Compile Include="Messages\Commands\DeleteLeadCommand.cs" />

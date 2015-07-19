@@ -1,18 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Matcha.WebApi.Domain.Events;
 
 namespace Matcha.WebApi.Handlers
 {
-    public class Event
-    {
-        protected Event()
-        {
-            EventId = Guid.NewGuid();
-            Timestamp = DateTime.UtcNow;
-        }
-        public Guid EventId { get; set; }
-        public DateTime Timestamp { get; set; }
-    }
+    
 
     public interface IEventPublisher
     {
