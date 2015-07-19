@@ -1,5 +1,4 @@
 ﻿using System;
-using Matcha.WebApi.Messages.Commands;
 using Matcha.WebApi.Messages.Dtos;
 using Matcha.WebApi.Messages.Events;
 using NHibernate.Mapping.ByCode;
@@ -12,8 +11,8 @@ namespace Matcha.WebApi.Domain.Models
         public Lead(LeadCreated creationEvent)
         {
             Validate(creationEvent);
-            Id = creationEvent.LeadDetail.Id;
-            ContactDetails = creationEvent.LeadDetail.ContactDetails;
+            Id = creationEvent.Payload.Id;
+            ContactDetails = creationEvent.Payload.ContactDetails;
         }
 
         protected Lead() { }
@@ -30,32 +29,32 @@ namespace Matcha.WebApi.Domain.Models
 
         public virtual void Update(LeadUpdated updateEvent)
         {
-            if (Id != updateEvent.LeadDetail.Id)
+            if (Id != updateEvent.Payload.Id)
                 throw new ArgumentException("Event is not for this Aggregate", "updateEvent");
 
-            ContactDetails = updateEvent.LeadDetail.ContactDetails;
+            ContactDetails = updateEvent.Payload.ContactDetails;
         }
         public virtual void Update(LeadDeleted updateEvent)
         {
-            if (Id != updateEvent.Id)
+            if (Id != updateEvent.AggregateId)
                 throw new ArgumentException("Event is not for this Aggregate", "updateEvent");
 
             IsDeleted = true;
         }
         public virtual void Update(LeadVetted updateEvent)
         {
-            if (Id != updateEvent.Id)
+            if (Id != updateEvent.AggregateId)
                 throw new ArgumentException("Event is not for this Aggregate", "updateEvent");
 
             IsVetted = true;
-            OpportunityId = updateEvent.OpportunityId;
+            OpportunityId = updateEvent.Payload.OpportunityId;
         }
         private static void Validate(LeadCreated message)
         {
             //TODO replace with fluent validation if we are going to do this
             Guard.NotNull(() => message, message);
-            Guard.NotDefault(() => message.LeadDetail.Id, message.LeadDetail.Id);
-            Guard.NotNull(() => message.LeadDetail.ContactDetails, message.LeadDetail.ContactDetails);
+            Guard.NotDefault(() => message.Payload.Id, message.Payload.Id);
+            Guard.NotNull(() => message.Payload.ContactDetails, message.Payload.ContactDetails);
         }
     }
 

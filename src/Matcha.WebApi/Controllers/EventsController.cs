@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Web.Http;
+using Matcha.WebApi.Domain.Events;
 using Matcha.WebApi.Handlers;
 
 namespace Matcha.WebApi.Controllers

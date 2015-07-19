@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.Remoting.Messaging;
 using Autofac;
+using Matcha.WebApi.Domain.Events;
 using Matcha.WebApi.Handlers;
 using Matcha.WebApi.Specifications.LeadFeatures;
 using Microsoft.Owin.Testing;
@@ -82,7 +84,7 @@ namespace Matcha.WebApi.Specifications
         {
             return HttpClient.GetAsync(urlPath).Result;
         }
-        
+
         public T GetLastEventOfType<T>() where T : Event
         {
             return GetEventsOfType<T>().LastOrDefault();
@@ -90,14 +92,13 @@ namespace Matcha.WebApi.Specifications
 
         public IEnumerable<T> GetEventsOfType<T>() where T : Event
         {
-            var requestUri = "api/Events/ByType/" + typeof(T).Name;
+            var requestUri = "api/Events/ByType/" + typeof(T).FullName;
             var getResponse = HttpClient.GetAsync(requestUri).Result;
             getResponse.EnsureSuccessStatusCode();
-            return getResponse.Content.ReadAsAsync<T[]>()
-                .Result
-                .Where(e => !_eventIdsToIgnore.Contains(e.EventId));
+            var result = getResponse.Content.ReadAsAsync<T[]>().Result;
+            return result.Where(e => !_eventIdsToIgnore.Contains(e.EventId));
         }
-        
+
         public void IgnoreAllPriorEvents()
         {
             var getResponse = HttpClient.GetAsync("api/Events/").Result;

@@ -134,7 +134,7 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
         {
             ScenarioContext.Current.SetCurrentUser(Users.EventSubscriber);
             var createdEvent = _matcha.GetLastEventOfType<LeadCreated>();
-            createdEvent.LeadDetail
+            createdEvent.Payload
                 .ToExpectedObject()
                 .ShouldMatch(new
                 {
@@ -148,7 +148,7 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
         {
             ScenarioContext.Current.SetCurrentUser(Users.EventSubscriber);
             var createdEvent = _matcha.GetLastEventOfType<LeadUpdated>();
-            createdEvent.LeadDetail
+            createdEvent.Payload
                 .ToExpectedObject()
                 .ShouldMatch(new
                 {
@@ -215,7 +215,7 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
         {
             var deleteEvent = _matcha.GetLastEventOfType<LeadDeleted>();
             Assert.NotNull(deleteEvent);
-            Assert.Equal(ScenarioContext.Current.GetLastResponseAggregateId(HttpMethod.Post, Resources.Leads), deleteEvent.Id);
+            Assert.Equal(ScenarioContext.Current.GetLastResponseAggregateId(HttpMethod.Post, Resources.Leads), deleteEvent.AggregateId);
         }
 
         [Then(@"LeadVetted event is raised")]
@@ -223,7 +223,7 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
         {
             var leadVetted = _matcha.GetLastEventOfType<LeadVetted>();
             Assert.NotNull(leadVetted);
-            Assert.Equal(ScenarioContext.Current.GetLastResponseAggregateId(HttpMethod.Post, Resources.Opportunities), leadVetted.OpportunityId);
+            Assert.Equal(ScenarioContext.Current.GetLastResponseAggregateId(HttpMethod.Post, Resources.Opportunities), leadVetted.Payload.OpportunityId);
         }
 
         [Then(@"OpportunityCreated event is raised")]

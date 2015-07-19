@@ -2,6 +2,7 @@
 using Autofac;
 using Autofac.Integration.WebApi;
 using Matcha.WebApi.Controllers;
+using Matcha.WebApi.Domain.Events;
 using Matcha.WebApi.Handlers;
 
 namespace Matcha.WebApi.Config
@@ -21,7 +22,7 @@ namespace Matcha.WebApi.Config
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterType<InMemoryEventPublisher>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<SqlEventPublisher>().AsImplementedInterfaces().SingleInstance();
             // For registering filter attibutes see : https://code.google.com/p/autofac/wiki/WebApiIntegration#Filters_without_attributesSee 
         }
     }
