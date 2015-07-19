@@ -14,10 +14,10 @@ namespace Matcha.WebApi.Domain.Events
         }
         public virtual Guid EventId { get; set; }
         public virtual DateTime Timestamp { get; set; }
+        public virtual Guid? AggregateId { get; set; }
         public virtual string EventType { get; set; }
         public virtual string EventPayloadType { get; set; }
         public virtual string EventPayloadAsJson { get; set; }
-        public virtual Guid? AggregateId { get; set; }
     }
 
     public class Event<TPayload> : Event where TPayload : class
