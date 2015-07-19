@@ -11,6 +11,7 @@ namespace Matcha.WebApi.Domain.Models
     {
         public Lead(LeadCreated creationEvent)
         {
+            Validate(creationEvent);
             Id = creationEvent.LeadDetail.Id;
             ContactDetails = creationEvent.LeadDetail.ContactDetails;
         }
@@ -19,7 +20,7 @@ namespace Matcha.WebApi.Domain.Models
 
         public virtual Guid Id { get; protected set; }
         public virtual bool IsVetted { get; protected set; }
-        public virtual Guid OpportunityId { get; protected set; }
+        public virtual Guid? OpportunityId { get; protected set; }
         public virtual bool IsDeleted { get; protected set; }
 
         /// <summary>
@@ -29,16 +30,35 @@ namespace Matcha.WebApi.Domain.Models
 
         public virtual void Update(LeadUpdated updateEvent)
         {
+            if (Id != updateEvent.LeadDetail.Id)
+                throw new ArgumentException("Event is not for this Aggregate", "updateEvent");
+
             ContactDetails = updateEvent.LeadDetail.ContactDetails;
         }
+        public virtual void Update(LeadDeleted updateEvent)
+        {
+            if (Id != updateEvent.Id)
+                throw new ArgumentException("Event is not for this Aggregate", "updateEvent");
 
-        private static void Validate(CreateLeadCommand message)
+            IsDeleted = true;
+        }
+        public virtual void Update(LeadVetted updateEvent)
+        {
+            if (Id != updateEvent.Id)
+                throw new ArgumentException("Event is not for this Aggregate", "updateEvent");
+
+            IsVetted = true;
+            OpportunityId = updateEvent.OpportunityId;
+        }
+        private static void Validate(LeadCreated message)
         {
             //TODO replace with fluent validation if we are going to do this
             Guard.NotNull(() => message, message);
-            Guard.NotNull(() => message.ContactDetails, message.ContactDetails);
+            Guard.NotDefault(() => message.LeadDetail.Id, message.LeadDetail.Id);
+            Guard.NotNull(() => message.LeadDetail.ContactDetails, message.LeadDetail.ContactDetails);
         }
     }
+
     public class LeadMap : ClassMapping<Lead>
     {
         public LeadMap()
@@ -52,6 +72,7 @@ namespace Matcha.WebApi.Domain.Models
                 m.NotNullable(true);
                 m.Type<JsonSerialisedData<ContactDetails>>();
             });
+            //TODO Considering adding a where clause for IsVetted and IsDeleted
         }
     }
 }
