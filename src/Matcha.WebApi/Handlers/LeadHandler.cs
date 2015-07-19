@@ -63,7 +63,8 @@ namespace Matcha.WebApi.Handlers
         {
             var @event = new LeadDeleted {Id = message.Id};
             var lead = _repository.GetLeadById(message.Id);
-            _repository.Delete(lead);
+            lead.Update(@event);
+            _repository.Store(lead);
             _eventPublisher.Publish(@event);
             return message.Id;
         }

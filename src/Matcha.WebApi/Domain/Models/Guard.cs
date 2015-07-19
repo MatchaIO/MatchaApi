@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Matcha.WebApi.Domain.Models
@@ -74,6 +75,12 @@ namespace Matcha.WebApi.Domain.Models
             var member = lambda.Body as MemberExpression;
             if (member == null) throw new InvalidOperationException("(reference) as LambdaExpression).Body is not a MemberExpression");
             return member.Member.Name;
+        }
+
+        public static void NotDefault<T>(Expression<Func<T>> reference, T value)
+        {
+            if (EqualityComparer<T>.Default.Equals(value, default(T)))
+                throw new ArgumentException("Parameter cannot be a default value.", GetParameterName(reference));
         }
     }
 }

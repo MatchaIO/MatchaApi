@@ -3,8 +3,8 @@ using Matcha.WebApi.Messages.Projections;
 
 namespace Matcha.WebApi.Messages.Events
 {
-    public class LeadCreated : Event
+    public class OpportunityCreated : Event
     {
-        public LeadDetail LeadDetail { get; set; }
+        public OpportunityDetail OpportunityDetail { get; set; }
     }
 }

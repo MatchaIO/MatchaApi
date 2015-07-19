@@ -44,7 +44,7 @@ namespace Matcha.WebApi.Controllers
         }
 
         /// <summary>
-        /// Gets a lead by opportunityId. Restricted to users with sales permssions 
+        /// Gets a lead by Id. Restricted to users with sales permssions 
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

@@ -80,22 +80,28 @@
     <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\LeadsController.cs" />
     <Compile Include="Controllers\MonitorController.cs" />
+    <Compile Include="Controllers\OpportunitiesController.cs" />
     <Compile Include="Controllers\UriExtensions.cs" />
+    <Compile Include="Domain\DataAccess\IOpportunityRepository.cs" />
     <Compile Include="Domain\DataAccess\LeadRepository.cs" />
     <Compile Include="Domain\DataAccess\EntityNotFoundException.cs" />
     <Compile Include="Domain\DataAccess\ILeadRepository.cs" />
     <Compile Include="Domain\DataAccess\NHibernateAutofacModuleBase.cs" />
     <Compile Include="Domain\DataAccess\NHibenateMappingExtensions.cs" />
+    <Compile Include="Domain\DataAccess\OpportunityRepository.cs" />
     <Compile Include="Domain\DataAccess\SessionHelper.cs" />
     <Compile Include="Domain\Models\Guard.cs" />
     <Compile Include="Domain\Models\JsonSerialisedData.cs" />
     <Compile Include="Domain\Models\Lead.cs" />
+    <Compile Include="Domain\Models\Opportunity.cs" />
     <Compile Include="Filters\EntityNotFoundExceptionAttribute.cs" />
     <Compile Include="Filters\ValidateModelAttribute.cs" />
     <Compile Include="Handlers\Class1.cs" />
     <Compile Include="Handlers\InMemoryEventPublisher.cs" />
     <Compile Include="Handlers\LeadHandler.cs" />
+    <Compile Include="Handlers\OpportunityHandler.cs" />
     <Compile Include="Messages\Commands\CreateLeadCommand.cs" />
+    <Compile Include="Messages\Commands\CreateOpportunityCommand.cs" />
     <Compile Include="Messages\Commands\DeleteLeadCommand.cs" />
     <Compile Include="Messages\Commands\UpdateLeadCommand.cs" />
     <Compile Include="Messages\Dtos\Contact.cs" />
@@ -104,9 +110,13 @@
     <Compile Include="Messages\Events\LeadCreated.cs" />
     <Compile Include="Messages\Events\LeadDeleted.cs" />
     <Compile Include="Messages\Events\LeadUpdated.cs" />
+    <Compile Include="Messages\Events\LeadVetted.cs" />
+    <Compile Include="Messages\Events\OpportunityCreated.cs" />
     <Compile Include="Messages\Projections\LeadDetail.cs" />
+    <Compile Include="Messages\Projections\OpportunityDetail.cs" />
     <Compile Include="Messages\Queries\GetLeadById.cs" />
     <Compile Include="Messages\Queries\GetLeads.cs" />
+    <Compile Include="Messages\Queries\GetOpportunityById.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
