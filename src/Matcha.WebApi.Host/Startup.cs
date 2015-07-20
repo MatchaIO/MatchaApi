@@ -1,7 +1,9 @@
-﻿using Matcha.WebApi.Config;
+﻿using System.IO;
+using Matcha.WebApi.Config;
 using Matcha.WebApi.Host;
 using Microsoft.Owin;
 using Owin;
+using Swashbuckle.Application;
 
 [assembly: OwinStartup(typeof(Startup))]
 namespace Matcha.WebApi.Host
@@ -13,6 +15,13 @@ namespace Matcha.WebApi.Host
         {
             var config = WebApiConfig.Register();
             app.UseWebApi(config);
+            config
+                .EnableSwagger(swaggerConfig =>
+                {
+                    swaggerConfig.SingleApiVersion("v1", "Matcha.IO");
+                    swaggerConfig.IncludeXmlComments("Matcha.WebApi.xml");
+                })
+                .EnableSwaggerUi();
             ContainerConfig.SetUpAutofac(config);
         }
     }
