@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Matcha.WebApi.Config;
+﻿using Matcha.WebApi.Config;
 using Matcha.WebApi.Host;
 using Microsoft.Owin;
 using Owin;
