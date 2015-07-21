@@ -21,7 +21,7 @@ namespace Matcha.WebApi.Specifications
             var config = WebApiConfig.Register();
             app.UseWebApi(config);
 
-            config.Services.Replace(typeof(IExceptionHandler), new TestExceptionHandler());
+            config.Services.Replace(typeof(IExceptionHandler), new TestExceptionHandler());//TODO pretty sure this is not soing what i wanted it to do
             Container = SetUpAutofac(config);
         }
 
