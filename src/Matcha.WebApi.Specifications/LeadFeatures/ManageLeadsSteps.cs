@@ -20,6 +20,7 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
         private readonly MatchaFixtureContext _matcha;
         private CreateLeadCommand _createLeadCmd;
         private UpdateLeadCommand _updateLeadCmd;
+        private dynamic _opportunityProposal;
         private static readonly Fixture Auto = new Fixture();
 
         public ManageLeadsSteps()
@@ -32,14 +33,23 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
         [Given(@"a valid Lead exists")]
         public void WhenTheySubmitTheirContactDetails()
         {
-            _createLeadCmd = Auto.Create<CreateLeadCommand>();
+            _createLeadCmd = CreateLeadCmd();
+            _matcha.Post("/api/leads", _createLeadCmd);
+        }
+
+        [When(@"they submit a fullly populated lead")]
+        public void WhenTheySubmitAFullyPopulatedLead()
+        {
+            _opportunityProposal = new { Title = Guid.NewGuid().ToString(), Description = Guid.NewGuid().ToString() };
+            _createLeadCmd = CreateLeadCmd();
+            _createLeadCmd.OpportunityProposal = _opportunityProposal;
             _matcha.Post("/api/leads", _createLeadCmd);
         }
 
         [Given(@"a Lead has been previously deleted")]
         public void GivenLeadHasBeenPreviouslyDeleted()
         {
-            _createLeadCmd = Auto.Build<CreateLeadCommand>().Create();
+            _createLeadCmd = CreateLeadCmd();
             _matcha.Post("/api/leads", _createLeadCmd);
             _matcha.Delete(ScenarioContext.Current.GetLastResponseHeaderLocation(HttpMethod.Post));
             _matcha.IgnoreAllPriorEvents();
@@ -48,7 +58,7 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
         [When(@"they submit their contact details with no name")]
         public void WhenTheySubmitTheirContactDetailsWithNoName()
         {
-            _createLeadCmd = Auto.Build<CreateLeadCommand>().Create();
+            _createLeadCmd = CreateLeadCmd();
             _createLeadCmd.ContactDetails.ContactName = null;
             _createLeadCmd.ContactDetails.OrganiastionName = null;
             _matcha.Post("/api/leads", _createLeadCmd);
@@ -57,7 +67,7 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
         [When(@"they submit their contact details with no contact")]
         public void WhenTheySubmitTheirContactDetailsWithNoContact()
         {
-            _createLeadCmd = Auto.Build<CreateLeadCommand>().Create();
+            _createLeadCmd = CreateLeadCmd();
             _createLeadCmd.ContactDetails.Contacts = new Contact[] { };
             _matcha.Post("/api/leads", _createLeadCmd);
         }
@@ -67,6 +77,7 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
         {
             var leadId = ScenarioContext.Current.GetLastResponseAggregateId(HttpMethod.Post, Resources.Leads);
             _updateLeadCmd = Auto.Build<UpdateLeadCommand>().With(cmd => cmd.Id, leadId).Create();
+            _updateLeadCmd.OpportunityProposal = new { Title = Guid.NewGuid().ToString(), Description = Guid.NewGuid().ToString() };
             _matcha.Put(ScenarioContext.Current.GetLastResponseHeaderLocation(HttpMethod.Post), _updateLeadCmd);
         }
 
@@ -77,6 +88,7 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
             _updateLeadCmd = Auto.Build<UpdateLeadCommand>().With(cmd => cmd.Id, leadId).Create();
             _updateLeadCmd.ContactDetails.ContactName = null;
             _updateLeadCmd.ContactDetails.OrganiastionName = null;
+            _updateLeadCmd.OpportunityProposal = new { Title = Guid.NewGuid().ToString(), Description = Guid.NewGuid().ToString() };
             _matcha.Put(ScenarioContext.Current.GetLastResponseHeaderLocation(HttpMethod.Post), _updateLeadCmd);
         }
 
@@ -86,6 +98,7 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
             var leadId = ScenarioContext.Current.GetLastResponseAggregateId(HttpMethod.Post, Resources.Leads);
             _updateLeadCmd = Auto.Build<UpdateLeadCommand>().With(cmd => cmd.Id, leadId).Create();
             _updateLeadCmd.ContactDetails.Contacts = new Contact[] { };
+            _updateLeadCmd.OpportunityProposal = new { Title = Guid.NewGuid().ToString(), Description = Guid.NewGuid().ToString() };
             _matcha.Put(ScenarioContext.Current.GetLastResponseHeaderLocation(HttpMethod.Post), _updateLeadCmd);
         }
 
@@ -120,13 +133,16 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
             ScenarioContext.Current.SetCurrentUser(Users.SalesAdmin);
             var lead = _matcha.Get<LeadDetail>(ScenarioContext.Current.GetLastResponseHeaderLocation(HttpMethod.Post));
             var contactDetails = _updateLeadCmd != null ? _updateLeadCmd.ContactDetails : _createLeadCmd.ContactDetails;
-            lead.ToExpectedObject()
-                .ShouldMatch(
-                new
-                {
-                    Id = ScenarioContext.Current.GetLastResponseAggregateId(HttpMethod.Post, Resources.Leads),
-                    ContactDetails = contactDetails
-                });
+            var op = _updateLeadCmd != null ? _updateLeadCmd.OpportunityProposal : _createLeadCmd.OpportunityProposal;
+            new
+            {
+                Id = ScenarioContext.Current.GetLastResponseAggregateId(HttpMethod.Post, Resources.Leads),
+                ContactDetails = contactDetails,
+            }
+                .ToExpectedObject()
+                .ShouldMatch(lead);
+
+            AssertDynamicEqual(op, lead.OpportunityProposal);
         }
 
         [Then(@"LeadCreated event is raised")]
@@ -134,27 +150,30 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
         {
             ScenarioContext.Current.SetCurrentUser(Users.EventSubscriber);
             var createdEvent = _matcha.GetLastEventOfType<LeadCreated>();
-            createdEvent.Payload
+            new
+            {
+                Id = ScenarioContext.Current.GetLastResponseAggregateId(HttpMethod.Post, Resources.Leads),
+                _createLeadCmd.ContactDetails,
+            }
                 .ToExpectedObject()
-                .ShouldMatch(new
-                {
-                    Id = ScenarioContext.Current.GetLastResponseAggregateId(HttpMethod.Post, Resources.Leads),
-                    _createLeadCmd.ContactDetails
-                });
+                .ShouldMatch(createdEvent.Payload);
+            
+            AssertDynamicEqual(_createLeadCmd.OpportunityProposal, createdEvent.Payload.OpportunityProposal);
         }
 
         [Then(@"LeadUpdated event is raised")]
         public void ThenLeadUpdatedEventIsRaised()
         {
             ScenarioContext.Current.SetCurrentUser(Users.EventSubscriber);
-            var createdEvent = _matcha.GetLastEventOfType<LeadUpdated>();
-            createdEvent.Payload
-                .ToExpectedObject()
-                .ShouldMatch(new
-                {
+            var updated = _matcha.GetLastEventOfType<LeadUpdated>();
+            new {
                     Id = ScenarioContext.Current.GetLastResponseAggregateId(HttpMethod.Post, Resources.Leads),
-                    _updateLeadCmd.ContactDetails
-                });
+                    _updateLeadCmd.ContactDetails,
+                }
+                .ToExpectedObject()
+                .ShouldMatch(updated.Payload);
+
+            AssertDynamicEqual(_updateLeadCmd.OpportunityProposal, updated.Payload.OpportunityProposal);
         }
 
         [Then(@"no (.*) are created")]
@@ -210,6 +229,13 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
             Assert.DoesNotContain(deletedId, leadIds);
         }
 
+        [Then(@"the opportunity details are on the lead")]
+        public void TheOpportunityDetailsAreOnTheLead()
+        {
+            var response = _matcha.Get<LeadDetail>(ScenarioContext.Current.GetLastResponseHeaderLocation(HttpMethod.Post, Resources.Leads));
+            AssertDynamicEqual(_opportunityProposal, response.OpportunityProposal);
+        }
+
         [Then(@"LeadDeleted event is raised")]
         public void ThenLeadDeletedEventIsRaised()
         {
@@ -233,6 +259,17 @@ namespace Matcha.WebApi.Specifications.LeadFeatures
             Assert.NotNull(opportunityCreated);
             Assert.Equal(ScenarioContext.Current.GetLastResponseAggregateId(HttpMethod.Post, Resources.Opportunities), opportunityCreated.OpportunityDetail.Id);
             _createLeadCmd.ContactDetails.ToExpectedObject().ShouldEqual(opportunityCreated.OpportunityDetail.ContactDetails);
+        }
+
+        private static CreateLeadCommand CreateLeadCmd()
+        {
+            var cmd = Auto.Create<CreateLeadCommand>();
+            cmd.OpportunityProposal = new { Title = Guid.NewGuid().ToString(), Description = Guid.NewGuid().ToString() };
+            return cmd;
+        }
+        private void AssertDynamicEqual(object a, object b)
+        {
+            Assert.Equal(Newtonsoft.Json.JsonConvert.SerializeObject(a), Newtonsoft.Json.JsonConvert.SerializeObject(b));
         }
     }
 }

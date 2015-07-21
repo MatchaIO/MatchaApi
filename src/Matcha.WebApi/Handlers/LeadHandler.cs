@@ -35,7 +35,8 @@ namespace Matcha.WebApi.Handlers
                 Payload = new LeadDetail
                 {
                     Id = aggregateId,
-                    ContactDetails = message.ContactDetails
+                    ContactDetails = message.ContactDetails,
+                    OpportunityProposal = message.OpportunityProposal
                 }
             };
             var lead = new Lead(@event);
@@ -52,7 +53,8 @@ namespace Matcha.WebApi.Handlers
                 Payload = new LeadDetail
                 {
                     Id = message.Id,
-                    ContactDetails = message.ContactDetails
+                    ContactDetails = message.ContactDetails,
+                    OpportunityProposal = message.OpportunityProposal
                 }
             };
             var lead = _repository.GetLeadById(message.Id);
@@ -83,18 +85,14 @@ namespace Matcha.WebApi.Handlers
             return new LeadDetail
             {
                 Id = lead.Id,
-                ContactDetails = lead.ContactDetails
+                ContactDetails = lead.ContactDetails,
+                OpportunityProposal = lead.OpportunityProposal
             };
         }
 
         public IEnumerable<LeadDetail> Handle(GetLeads message)
         {
-            return _repository.GetAllCurrentLeads()
-                .Select(lead => new LeadDetail
-                                    {
-                                        Id = lead.Id,
-                                        ContactDetails = lead.ContactDetails
-                                    });
+            return _repository.GetAllCurrentLeads().Select(MapToLeadDetail);
         }
     }
 }
