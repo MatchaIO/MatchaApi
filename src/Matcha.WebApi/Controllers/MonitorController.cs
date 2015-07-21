@@ -7,7 +7,7 @@ namespace Matcha.WebApi.Controllers
     public class MonitorController : ApiController
     {
         /// <summary>
-        /// Monitoring Endpoint. This is intened for internla use - keep site alive, ensure we are logging and monitoring can see we are up
+        /// Monitoring Endpoint. This is intended for internal use - keep site alive, ensure we are logging and monitoring can see we are up
         /// </summary>
         /// <returns>A summary of the current state of the system</returns>
         [Route("monitor")]
