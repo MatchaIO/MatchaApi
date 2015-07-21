@@ -11,6 +11,15 @@ Scenario: Create a lead
 	And a SalesAdmin user can retrieve the lead
 	And LeadCreated event is raised
 
+Scenario: Create a lead with opportunity details
+	Given an anonymous user using the api
+	When they submit a fullly populated lead
+	Then the new Id is returned
+	And a Created is returned
+	And a SalesAdmin user can retrieve the lead
+	And the opportunity details are on the lead
+	And LeadCreated event is raised
+
 Scenario: Continue to add to a lead
 	Given an anonymous user using the api
 	And they have submited their contact details

@@ -13,6 +13,7 @@ namespace Matcha.WebApi.Domain.Models
             Validate(creationEvent);
             Id = creationEvent.Payload.Id;
             ContactDetails = creationEvent.Payload.ContactDetails;
+            OpportunityProposal = creationEvent.Payload.OpportunityProposal;
         }
 
         protected Lead() { }
@@ -27,12 +28,18 @@ namespace Matcha.WebApi.Domain.Models
         /// </summary>
         public virtual ContactDetails ContactDetails { get; protected set; }
 
+        /// <summary>
+        /// Opportunity details are not required, however if the lead is happy to provide more information we will take it
+        /// </summary>
+        public virtual dynamic OpportunityProposal { get; protected set; }
+
         public virtual void Update(LeadUpdated updateEvent)
         {
             if (Id != updateEvent.Payload.Id)
                 throw new ArgumentException("Event is not for this Aggregate", "updateEvent");
 
             ContactDetails = updateEvent.Payload.ContactDetails;
+            OpportunityProposal = updateEvent.Payload.OpportunityProposal;
         }
         public virtual void Update(LeadDeleted updateEvent)
         {
@@ -70,6 +77,11 @@ namespace Matcha.WebApi.Domain.Models
             {
                 m.NotNullable(true);
                 m.Type<JsonSerialisedData<ContactDetails>>();
+            });
+            Property(x => x.OpportunityProposal, m =>
+            {
+                m.NotNullable(false);
+                m.Type<JsonSerialisedData<dynamic>>();
             });
             //TODO Considering adding a where clause for IsVetted and IsDeleted
         }

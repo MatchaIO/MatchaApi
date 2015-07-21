@@ -11,6 +11,7 @@ namespace Matcha.WebApi.Messages.Commands
     public class CreateLeadCommand : ICommand<LeadDetail>
     {
         public ContactDetails ContactDetails { get; set; }
+        public dynamic OpportunityProposal { get; set; }
         //The info regarding what they want is relavent but not sure what shape it should take yet
     }
     public class CreateLeadCommandValidator : AbstractValidator<CreateLeadCommand>

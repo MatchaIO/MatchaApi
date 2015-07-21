@@ -99,23 +99,49 @@ this.ScenarioSetup(scenarioInfo);
         
         [Xunit.FactAttribute()]
         [Xunit.TraitAttribute("FeatureTitle", "Manage Leads")]
-        [Xunit.TraitAttribute("Description", "Continue to add to a lead")]
-        public virtual void ContinueToAddToALead()
+        [Xunit.TraitAttribute("Description", "Create a lead with opportunity details")]
+        public virtual void CreateALeadWithOpportunityDetails()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Continue to add to a lead", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Create a lead with opportunity details", ((string[])(null)));
 #line 14
 this.ScenarioSetup(scenarioInfo);
 #line 15
  testRunner.Given("an anonymous user using the api", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 16
- testRunner.And("they have submited their contact details", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.When("they submit a fullly populated lead", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 17
- testRunner.When("an update command is made with the lead id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.Then("the new Id is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 18
- testRunner.Then("a SalesAdmin user can retrieve the lead", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.And("a Created is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 19
- testRunner.And("a Ok is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("a SalesAdmin user can retrieve the lead", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 20
+ testRunner.And("the opportunity details are on the lead", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 21
+ testRunner.And("LeadCreated event is raised", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.FactAttribute()]
+        [Xunit.TraitAttribute("FeatureTitle", "Manage Leads")]
+        [Xunit.TraitAttribute("Description", "Continue to add to a lead")]
+        public virtual void ContinueToAddToALead()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Continue to add to a lead", ((string[])(null)));
+#line 23
+this.ScenarioSetup(scenarioInfo);
+#line 24
+ testRunner.Given("an anonymous user using the api", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 25
+ testRunner.And("they have submited their contact details", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 26
+ testRunner.When("an update command is made with the lead id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 27
+ testRunner.Then("a SalesAdmin user can retrieve the lead", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 28
+ testRunner.And("a Ok is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 29
  testRunner.And("LeadUpdated event is raised", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -127,19 +153,19 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void SalesUserUpdateALead()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Sales user update a Lead", ((string[])(null)));
-#line 22
+#line 31
 this.ScenarioSetup(scenarioInfo);
-#line 23
+#line 32
  testRunner.Given("an sales user using the api", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 24
+#line 33
  testRunner.And("a valid Lead exists", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 25
+#line 34
  testRunner.When("an update command is made with the lead id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 26
+#line 35
  testRunner.Then("a Ok is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 27
+#line 36
  testRunner.And("LeadUpdated event is raised", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 28
+#line 37
  testRunner.And("a SalesAdmin user can retrieve the lead", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -151,17 +177,17 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void AttemptToCreateALeadWithoutAName()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Attempt to Create a lead without a name", ((string[])(null)));
-#line 30
+#line 39
 this.ScenarioSetup(scenarioInfo);
-#line 31
+#line 40
  testRunner.Given("an anonymous user using the api", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 32
+#line 41
  testRunner.When("they submit their contact details with no name", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 33
+#line 42
  testRunner.Then("a BadRequest is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 34
+#line 43
  testRunner.And("no leads are created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 35
+#line 44
  testRunner.And("no events are raised", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -173,17 +199,17 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void AttemptToCreateALeadWithoutAContact()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Attempt to Create a lead without a contact", ((string[])(null)));
-#line 37
+#line 46
 this.ScenarioSetup(scenarioInfo);
-#line 38
+#line 47
  testRunner.Given("an anonymous user using the api", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 39
+#line 48
  testRunner.When("they submit their contact details with no contact", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 40
+#line 49
  testRunner.Then("a BadRequest is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 41
+#line 50
  testRunner.And("no leads are created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 42
+#line 51
  testRunner.And("no events are raised", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -195,17 +221,17 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void AttemptToUpdateALeadWithoutAContact()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Attempt to Update a lead without a contact", ((string[])(null)));
-#line 44
+#line 53
 this.ScenarioSetup(scenarioInfo);
-#line 45
+#line 54
  testRunner.Given("an anonymous user using the api", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 46
+#line 55
  testRunner.And("they have submited their contact details", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 47
+#line 56
  testRunner.When("they modify their contact details with no contact", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 48
+#line 57
  testRunner.Then("a BadRequest is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 49
+#line 58
  testRunner.And("no LeadUpdated event is raised", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -217,17 +243,17 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void AttemptToUpdateALeadWithoutAName()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Attempt to Update a lead without a name", ((string[])(null)));
-#line 51
+#line 60
 this.ScenarioSetup(scenarioInfo);
-#line 52
+#line 61
  testRunner.Given("an anonymous user using the api", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 53
+#line 62
  testRunner.And("they have submited their contact details", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 54
+#line 63
  testRunner.When("they modify their contact details with no name", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 55
+#line 64
  testRunner.Then("a BadRequest is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 56
+#line 65
  testRunner.And("no LeadUpdated event is raised", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -239,17 +265,17 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void AttemptToUpdateAnInvalidLead()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Attempt to Update an invalid lead", ((string[])(null)));
-#line 58
+#line 67
 this.ScenarioSetup(scenarioInfo);
-#line 59
+#line 68
  testRunner.Given("an sales user using the api", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 60
+#line 69
  testRunner.And("a valid Lead exists", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 61
+#line 70
  testRunner.When("an update command is made with an invalid id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 62
+#line 71
  testRunner.Then("a NotFound is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 63
+#line 72
  testRunner.And("no LeadUpdated event is raised", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -261,19 +287,19 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void DeleteANonExistantLead()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Delete A non existant Lead", ((string[])(null)));
-#line 65
+#line 74
 this.ScenarioSetup(scenarioInfo);
-#line 66
+#line 75
  testRunner.Given("an sales user using the api", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 67
+#line 76
  testRunner.And("a valid Lead exists", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 68
+#line 77
  testRunner.When("a delete command is made with an invalid id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 69
+#line 78
  testRunner.Then("a NotFound is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 70
+#line 79
  testRunner.And("no LeadDeleted event is raised", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 71
+#line 80
  testRunner.And("a SalesAdmin user can retrieve the lead", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -285,19 +311,19 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void DeleteADeletedLead()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Delete A deleted Lead", ((string[])(null)));
-#line 73
+#line 82
 this.ScenarioSetup(scenarioInfo);
-#line 74
+#line 83
  testRunner.Given("an sales user using the api", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 75
+#line 84
  testRunner.And("a Lead has been previously deleted", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 76
+#line 85
  testRunner.When("a delete command is made with the lead id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 77
+#line 86
  testRunner.Then("a NotFound is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 78
+#line 87
  testRunner.And("no LeadDeleted event is raised", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 79
+#line 88
  testRunner.And("the lead can not be retrieved by id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -309,21 +335,21 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void DeleteALead()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Delete A Lead", ((string[])(null)));
-#line 81
+#line 90
 this.ScenarioSetup(scenarioInfo);
-#line 82
+#line 91
  testRunner.Given("an sales user using the api", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 83
+#line 92
  testRunner.And("a valid Lead exists", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 84
+#line 93
  testRunner.When("a delete command is made with the lead id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 85
+#line 94
  testRunner.Then("a NoContent is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 86
+#line 95
  testRunner.And("the lead can not be retrieved by id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 87
+#line 96
  testRunner.And("the lead does not appear in the lead list", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 88
+#line 97
  testRunner.And("LeadDeleted event is raised", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -335,25 +361,25 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void VettingALead()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Vetting a Lead", ((string[])(null)));
-#line 91
-this.ScenarioSetup(scenarioInfo);
-#line 92
- testRunner.Given("an sales user using the api", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 93
- testRunner.And("a valid Lead exists", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 94
- testRunner.When("the lead is vetted", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 95
- testRunner.Then("a Created is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 96
- testRunner.And("the lead can not be retrieved by id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 97
- testRunner.And("the lead does not appear in the lead list", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 98
- testRunner.And("the opportunity can be retrieved by id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 99
- testRunner.And("LeadVetted event is raised", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 100
+this.ScenarioSetup(scenarioInfo);
+#line 101
+ testRunner.Given("an sales user using the api", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 102
+ testRunner.And("a valid Lead exists", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 103
+ testRunner.When("the lead is vetted", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 104
+ testRunner.Then("a Created is returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 105
+ testRunner.And("the lead can not be retrieved by id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 106
+ testRunner.And("the lead does not appear in the lead list", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 107
+ testRunner.And("the opportunity can be retrieved by id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 108
+ testRunner.And("LeadVetted event is raised", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 109
  testRunner.And("OpportunityCreated event is raised", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();

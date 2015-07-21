@@ -7,5 +7,6 @@ namespace Matcha.WebApi.Messages.Projections
     {
         public Guid Id { get; set; }
         public ContactDetails ContactDetails { get; set; }
+        public dynamic OpportunityProposal { get; set; }
     }
 }
