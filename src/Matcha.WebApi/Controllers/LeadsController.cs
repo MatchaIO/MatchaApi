@@ -36,7 +36,7 @@ namespace Matcha.WebApi.Controllers
         /// <summary>
         /// Gets all leads. Restricted to users with sales permssions 
         /// </summary>
-        /// <returns></returns>
+        /// <returns>All the current Leads</returns>
         [Route("api/leads/")]
         public IEnumerable<LeadDetail> Get()
         {
@@ -44,10 +44,10 @@ namespace Matcha.WebApi.Controllers
         }
 
         /// <summary>
-        /// Gets a lead by Id. Restricted to users with sales permssions 
+        /// Gets a lead by Id. Restricted to users with sales permssions
         /// </summary>
         /// <param name="id"></param>
-        /// <returns></returns>
+        /// <returns>The lead details</returns>
         [Route("api/leads/{id}")]
         public LeadDetail Get(Guid id)
         {
@@ -58,7 +58,7 @@ namespace Matcha.WebApi.Controllers
         /// Create the bare minimum lead required for Sales to contact the prospective client
         /// Raises <see cref="LeadCreated"/>. 
         /// </summary>
-        /// <param name="lead"></param>
+        /// <param name="lead">A create lead command</param>
         [Route("api/leads")]
         public HttpResponseMessage Post([FromBody]CreateLeadCommand lead)
         {
@@ -73,8 +73,8 @@ namespace Matcha.WebApi.Controllers
         /// Modifies the sales lead required for Sales to contact the prospective client
         /// Raises <see cref="LeadUpdated"/>. 
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="lead"></param>
+        /// <param name="id">Ther lead Id</param>
+        /// <param name="lead">The update lead command</param>
         [Route("api/leads/{id}")]
         public HttpResponseMessage Put(Guid id, [FromBody]UpdateLeadCommand lead)
         {
@@ -86,10 +86,10 @@ namespace Matcha.WebApi.Controllers
         }
 
         /// <summary>
-        /// Deletes the sales lead 
+        /// Withdraws the sales lead 
         /// Raises <see cref="LeadDeleted"/>. 
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">The lead Id</param>
         [Route("api/leads/{id}")]
         public HttpResponseMessage Delete(Guid id)
         {

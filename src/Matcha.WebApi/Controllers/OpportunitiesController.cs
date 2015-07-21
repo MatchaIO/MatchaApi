@@ -21,18 +21,8 @@ namespace Matcha.WebApi.Controllers
             _getOpportunity = getOpportunity;
         }
 
-        ///// <summary>
-        ///// Gets all current opportunities. Restricted to users with sales permssions 
-        ///// </summary>
-        ///// <returns></returns>
-        //[Route("api/opportunities/")]
-        //public IEnumerable<LeadDetail> Get()
-        //{
-        //    return _getOpportunities.Handle(new GetOpportunities());//TODO should at least consider batching?
-        //}
-
         /// <summary>
-        /// Gets a opportunity by opportunityId. Restricted to users with sales permssions 
+        /// Gets a opportunity by opportunity Id. Restricted to users with sales or talent permssions 
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -43,10 +33,12 @@ namespace Matcha.WebApi.Controllers
         }
 
         /// <summary>
-        /// Create the bare minimum lead required for Sales to contact the prospective client
+        /// Create an opportunity that can now be accessed by the talent. This can also be used to vet existing leads, in which those leads will no longer be visible to sales users.
+        /// Restricted to sales users
         /// Raises <see cref="OpportunityCreated"/>. 
+        /// Optionally Raises <see cref="LeadVetted"/>. 
         /// </summary>
-        /// <param name="command"></param>
+        /// <param name="command">The create opportunity command</param>
         [Route("api/opportunities")]
         public HttpResponseMessage Post([FromBody]CreateOpportunityCommand command)
         {

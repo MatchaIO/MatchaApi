@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Matcha.WebApi.Handlers;
@@ -31,23 +32,4 @@ namespace Matcha.WebApi.Domain.Events
             return _session.Query<Event>().ToList();
         }
     }
-    //public class InMemoryEventPublisher : IEventPublisher, IEventRepository
-    //{
-    //    public static readonly List<Event> _publishedEvents = new List<Event>();
-
-    //    public void Publish(Event eventToPublish)
-    //    {
-    //        _publishedEvents.Add(eventToPublish);
-    //    }
-
-    //    public IEnumerable<Event> EventsOfType(string eventType)
-    //    {
-    //        return _publishedEvents.Where(e => e.GetType().Name == eventType);
-    //    }
-
-    //    public IEnumerable<Event> GetAll()
-    //    {
-    //        return _publishedEvents;
-    //    }
-    //}
 }
