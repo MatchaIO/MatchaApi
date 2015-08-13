@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Matcha.WebApi.Specifications")]
+[assembly: AssemblyTitle("Matcha.WebApi.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Matcha.WebApi.Specifications")]
+[assembly: AssemblyProduct("Matcha.WebApi.Tests")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("8d43e475-d98a-4199-911a-f00896d87073")]
+[assembly: Guid("ab964d2d-497a-4483-bf85-137992aa2fc4")]
 
 // Version information for an assembly consists of the following four values:
 //

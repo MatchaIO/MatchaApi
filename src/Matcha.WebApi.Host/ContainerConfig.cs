@@ -4,7 +4,7 @@ using Autofac;
 using Autofac.Integration.WebApi;
 using Matcha.WebApi.Config;
 using Matcha.WebApi.Domain.Models;
-using Matcha.WebApi.Specifications; //TODO... naughty
+using Matcha.WebApi.Tests; //TODO... naughty
 using NHibernate;
 using NHibernate.Tool.hbm2ddl;
 

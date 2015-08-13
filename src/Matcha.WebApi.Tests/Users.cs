@@ -1,4 +1,4 @@
-﻿namespace Matcha.WebApi.Specifications
+namespace Matcha.WebApi.Tests
 {
     public enum Users
     {

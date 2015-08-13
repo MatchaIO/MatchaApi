@@ -1,12 +1,12 @@
 ﻿using System;
 using Matcha.WebApi.Handlers;
-using Matcha.WebApi.Messages.Projections;
+using Matcha.WebApi.Messages.Dtos;
 
 namespace Matcha.WebApi.Messages.Queries
 {
-    public class GetLeadById : IQuery<LeadDetail>
+    public class GetTalentById : IQuery<TalentProfile>
     {
-        public GetLeadById(Guid id)
+        public GetTalentById(Guid id)
         {
             Id = id;
         }
