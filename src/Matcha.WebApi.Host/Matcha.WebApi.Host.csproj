@@ -97,7 +97,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Matcha.WebApi.Specifications\SqliteFileStorageNHibernateModule.cs">
+    <Compile Include="..\Matcha.WebApi.Tests\SqliteFileStorageNHibernateModule.cs">
       <Link>SqliteFileStorageNHibernateModule.cs</Link>
     </Compile>
     <Compile Include="ContainerConfig.cs" />
