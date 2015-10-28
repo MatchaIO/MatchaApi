@@ -24,19 +24,31 @@ namespace Matcha.WebApi.Handlers
         public TalentProfile Handle(CreateTalentProfileCommand message)
         {
             var aggregateId = Guid.NewGuid();
+
+            var userCreateEvent = new UserCreatedEvent { AggregateId = Guid.NewGuid(), Username = message.Email, Email = message.Email, /*Pasword??,*/ /*roles*/};
+            var userPasswordRest = new UserPasswordRestRequested { Username = message.Email };
+            var user = new User(userCreateEvent);
+            //user.Reset(userPasswordRest);//TODO ???
             var @event = new TalentProfileCreated
-           {
-               AggregateId = aggregateId,
-               TalentProfile = new TalentProfile
-               {
-                   Id = aggregateId,
-                   FirstName = message.FirstName,
-                   Surname = message.Surname,
-                   Email = message.Email
-               }
-           };
+            {
+                AggregateId = aggregateId,
+                TalentProfile = new TalentProfile
+                {
+                    Id = aggregateId,
+                    FirstName = message.FirstName,
+                    Surname = message.Surname,
+                    Email = message.Email
+                },
+                UserDetails = new UserDetails
+                {
+                    UserId = user.Id,
+                    Username = user.Username
+                }
+            };
             var talent = new Talent(@event);
             _repository.Store(talent);
+            _eventPublisher.Publish(userCreateEvent);
+            _eventPublisher.Publish(userPasswordRest);
             _eventPublisher.Publish(@event);
             return MapToTalentProfile(talent);
         }

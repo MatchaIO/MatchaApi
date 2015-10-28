@@ -11,7 +11,11 @@ namespace Matcha.WebApi.Tests.Features.Talent
             this.Given(s => s.AnAnonymousUserUsingTheApi())
                 .When(s => s.TheySubmitTheirProfileDetails())
                 .Then(s => s.TheNewIdIsReturned())
-                .BDDfy();
+                .And(s => s.ATalentadminUserCanRetrieveTheTalent())
+                .And(s => s.TalentcreatedEventIsRaised())
+                //.And(s => s.AUserIsCreatedWithTheTalentEmailAddress())
+                //.And(s => s.APasswordResetEventIsRaisedWithTheTalentEmailAddress())
+             .BDDfy();
         }
     }
 }

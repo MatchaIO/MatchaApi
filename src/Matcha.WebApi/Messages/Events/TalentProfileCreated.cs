@@ -6,5 +6,6 @@ namespace Matcha.WebApi.Messages.Events
     public class TalentProfileCreated : Event
     {
         public TalentProfile TalentProfile { get; set; }
+        public UserDetails UserDetails { get; set; }
     }
 }

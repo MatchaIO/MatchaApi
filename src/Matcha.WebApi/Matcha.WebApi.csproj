@@ -102,6 +102,7 @@
     <Compile Include="Domain\Models\Lead.cs" />
     <Compile Include="Domain\Models\Opportunity.cs" />
     <Compile Include="Domain\Models\Talent.cs" />
+    <Compile Include="Domain\Models\User.cs" />
     <Compile Include="Filters\EntityNotFoundExceptionAttribute.cs" />
     <Compile Include="Filters\ValidateModelAttribute.cs" />
     <Compile Include="Handlers\Class1.cs" />
@@ -117,6 +118,7 @@
     <Compile Include="Messages\Dtos\Contact.cs" />
     <Compile Include="Messages\Dtos\ContactDetails.cs" />
     <Compile Include="Messages\Dtos\TalentProfile.cs" />
+    <Compile Include="Messages\Dtos\UserDetails.cs" />
     <Compile Include="Messages\Dtos\Validators\ContactDetailsValidator.cs" />
     <Compile Include="Messages\Events\LeadCreated.cs" />
     <Compile Include="Messages\Events\LeadDeleted.cs" />
@@ -124,6 +126,8 @@
     <Compile Include="Messages\Events\LeadVetted.cs" />
     <Compile Include="Messages\Events\OpportunityCreated.cs" />
     <Compile Include="Messages\Events\TalentProfileCreated.cs" />
+    <Compile Include="Messages\Events\UserCreatedEvent.cs" />
+    <Compile Include="Messages\Events\UserPasswordRestRequested.cs" />
     <Compile Include="Messages\Projections\LeadDetail.cs" />
     <Compile Include="Messages\Projections\OpportunityDetail.cs" />
     <Compile Include="Messages\Queries\GetLeadById.cs" />
