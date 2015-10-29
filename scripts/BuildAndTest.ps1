@@ -23,11 +23,18 @@ foreach ($solution in $solutions) {
 }
 
 $xunitRunner = "src\packages\xunit.runner.console.2.0.0\tools\xunit.console.exe"
-$testAssemblies = get-childitem $buildOutput *.Specifications.dll 
-
+$testAssemblies = get-childitem $buildOutput *.Tests.dll 
+write-output "Running tests..."
 foreach ($testAssembly in $testAssemblies) {
 	& $xunitRunner $testAssembly.FullName
 	if (!$?) {
 			$exitCode = 1
 	}
+}
+if(test-path ("$buildOutput\BDDfy.html")){
+	write-output "Running tests complete."
+	write-output "Results available at $buildOutput\BDDfy.html"
+}
+else{
+	write-error"Running tests complete. Results file is missing"	
 }
