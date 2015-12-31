@@ -1,0 +1,15 @@
+##powershell samples
+
+## post lead and then get it (assuming no auth)
+$leadCreateResp = Invoke-WebRequest -ContentType "application/json" -Method POST -Uri http://localhost:51102/api/Leads -Body "{ ContactDetails: { ContactName:'Rhys',Contacts: [{Type:'Number',Details:'0420264642'},{Type:'Email', Details:'rhys@rhysc.com'}] }}"	
+
+## Get the new Lead
+$leadDetailsResp = Invoke-WebRequest -ContentType "application/json" -Method GET -Uri $leadCreateResp.Headers.Location 
+
+##Vet the lead
+$leadVettedResp = Invoke-WebRequest -ContentType "application/json" -Method POST -Uri http://localhost:51102/api/opportunities -Body $leadDetailsResp.Content.replace('"Id"', '"LeadId"')	
+
+$opportunityDetailsResp = Invoke-WebRequest -ContentType "application/json" -Method GET -Uri $leadVettedResp.Headers.Location 
+
+##Show me what ya got..
+$opportunityDetailsResp 
