@@ -5,7 +5,7 @@ using Matcha.WebApi.Domain.Models;
 using NHibernate;
 using NHibernate.Linq;
 
-namespace Matcha.WebApi.Domain.DataAccess
+namespace Matcha.WebApi.Domain.DataAccess.NHibernateImpl
 {
     public class LeadRepository : ILeadRepository
     {

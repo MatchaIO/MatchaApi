@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using NHibernate.Mapping.ByCode;
 
-namespace Matcha.WebApi.Domain.DataAccess
+namespace Matcha.WebApi.Domain.DataAccess.NHibernateImpl
 {
     public static class NHibenateMappingExtensions
     {
