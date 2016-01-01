@@ -128,7 +128,7 @@
     <Compile Include="Resources.cs" />
     <Compile Include="TestOwinStartup.cs" />
     <Compile Include="Users.cs" />
-    <Compile Include="SqliteFileStorageNHibernateModule.cs" />
+    <Compile Include="NHibernateImpl\SqliteFileStorageNHibernateModule.cs" />
     <Compile Include="Features\Leads\LeadsSteps.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -142,6 +142,7 @@
       <Name>Matcha.WebApi</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

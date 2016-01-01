@@ -5,7 +5,7 @@ using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Mapping.ByCode;
 
-namespace Matcha.WebApi.Domain.DataAccess
+namespace Matcha.WebApi.Domain.DataAccess.NHibernateImpl
 {
     public abstract class NHibernateAutofacModuleBase : Autofac.Module
     {

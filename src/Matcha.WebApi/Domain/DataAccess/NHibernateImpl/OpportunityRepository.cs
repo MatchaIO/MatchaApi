@@ -2,7 +2,7 @@
 using Matcha.WebApi.Domain.Models;
 using NHibernate;
 
-namespace Matcha.WebApi.Domain.DataAccess
+namespace Matcha.WebApi.Domain.DataAccess.NHibernateImpl
 {
     public class OpportunityRepository : IOpportunityRepository
     {

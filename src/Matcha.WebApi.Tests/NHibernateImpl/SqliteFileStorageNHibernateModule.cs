@@ -3,13 +3,14 @@ using System.Data;
 using System.Reflection;
 using Autofac.Builder;
 using Matcha.WebApi.Domain.DataAccess;
+using Matcha.WebApi.Domain.DataAccess.NHibernateImpl;
 using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Connection;
 using NHibernate.Dialect;
 using NHibernate.Driver;
 
-namespace Matcha.WebApi.Tests
+namespace Matcha.WebApi.Tests.NHibernateImpl
 {
     public class SqliteFileStorageNHibernateModule : NHibernateAutofacModuleBase
     {

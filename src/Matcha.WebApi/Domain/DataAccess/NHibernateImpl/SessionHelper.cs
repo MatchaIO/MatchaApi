@@ -1,7 +1,7 @@
 ﻿using System;
 using NHibernate;
 
-namespace Matcha.WebApi.Domain.DataAccess
+namespace Matcha.WebApi.Domain.DataAccess.NHibernateImpl
 {
     public static class SessionHelper
     {
