@@ -24,7 +24,7 @@ namespace Matcha.WebApi.Tests
             var builder = new ContainerBuilder();
 
             builder.RegisterModule(new WebApiAutofacModule());
-            builder.RegisterModule(new SqliteFileStorageNHibernateModule(typeof (Lead).Assembly));
+            builder.RegisterModule(new NHibernateImpl.SqliteFileStorageNHibernateModule(typeof(Lead).Assembly));
 
             var container = builder.Build();
             // Configure Web API with the dependency resolver.

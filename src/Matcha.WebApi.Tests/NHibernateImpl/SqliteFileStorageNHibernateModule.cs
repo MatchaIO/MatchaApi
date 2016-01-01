@@ -10,7 +10,7 @@ using NHibernate.Connection;
 using NHibernate.Dialect;
 using NHibernate.Driver;
 
-namespace Matcha.WebApi.Tests
+namespace Matcha.WebApi.Tests.NHibernateImpl
 {
     public class SqliteFileStorageNHibernateModule : NHibernateAutofacModuleBase
     {

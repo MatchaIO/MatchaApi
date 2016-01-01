@@ -20,8 +20,8 @@ namespace Matcha.WebApi.Host
         {
             var builder = new ContainerBuilder();
 
-            builder.RegisterModule(new WebApiAutofacModule()); 
-            builder.RegisterModule(new SqliteFileStorageNHibernateModule(typeof(Lead).Assembly));//TODO this is not prod code - its alsoa copied file for a test project... :/
+            builder.RegisterModule(new WebApiAutofacModule());
+            builder.RegisterModule(new Matcha.WebApi.Tests.NHibernateImpl.SqliteFileStorageNHibernateModule(typeof(Lead).Assembly));//TODO this is not prod code - its alsoa copied file for a test project... :/
 
             
             var container = builder.Build();
