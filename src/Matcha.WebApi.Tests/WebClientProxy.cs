@@ -4,7 +4,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using EventStore.ClientAPI;
 using Matcha.WebApi.Domain.Events;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Matcha.WebApi.Tests
 {
@@ -78,7 +81,7 @@ namespace Matcha.WebApi.Tests
 
         public T GetLastEventOfType<T>() where T : Event
         {
-            return GetEventsOfType<T>().LastOrDefault();
+            return GetEventsOfType<T>().FirstOrDefault();//they are return in desc order so you have to page to get back to the first (in this impl)
         }
 
         public IEnumerable<T> GetEventsOfType<T>() where T : Event
@@ -86,8 +89,15 @@ namespace Matcha.WebApi.Tests
             var requestUri = "api/Events/ByType/" + typeof(T).FullName;
             var getResponse = _httpClient.GetAsync(requestUri).Result;
             getResponse.EnsureSuccessStatusCode();
-            var result = getResponse.Content.ReadAsAsync<T[]>().Result;
-            return result.Where(e => !_eventIdsToIgnore.Contains(e.EventId));
+            var stringResult = getResponse.Content.ReadAsStringAsync().Result;
+            var events = JsonConvert.DeserializeObject<StubResolvedEvent[]>(stringResult);
+
+            var rawEvents = events
+                .Select(e => Convert.FromBase64String(e.Event.Data))
+                .Select(System.Text.Encoding.Default.GetString)
+                .Select(JsonConvert.DeserializeObject<T>);
+
+            return rawEvents.Where(e => !_eventIdsToIgnore.Contains(e.EventId));
         }
 
         public void IgnoreAllPriorEvents()
@@ -122,5 +132,26 @@ namespace Matcha.WebApi.Tests
             var lastHeader = GetLastHeaders(method, resource);
             return lastHeader.Location.PathAndQuery;
         }
+    }
+
+
+
+    public class StubResolvedEvent
+    {
+        public StubEvent Event { get; set; }
+
+    }
+
+    public class StubEvent
+    {
+        public string EventStreamId { get; set; }
+        public string EventId { get; set; }
+        public int EventNumber { get; set; }
+        public string EventType { get; set; }
+        public string Data { get; set; }
+        public string Metadata { get; set; }
+        public bool IsJson { get; set; }
+        public DateTime Created { get; set; }
+        public long CreatedEpoch { get; set; }
     }
 }

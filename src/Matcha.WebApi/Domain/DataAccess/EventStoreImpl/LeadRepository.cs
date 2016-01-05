@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Remoting.Messaging;
 using System.Runtime.Serialization;
 using System.Text;
 using EventStore.ClientAPI;
+using EventStore.ClientAPI.SystemData;
 using Matcha.WebApi.Domain.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -48,6 +50,7 @@ namespace Matcha.WebApi.Domain.DataAccess.EventStoreImpl
         TAggregate GetById<TAggregate>(Guid id) where TAggregate : class, IEventBasedAggregate;
         TAggregate GetById<TAggregate>(Guid id, int version) where TAggregate : class, IEventBasedAggregate;
         void Save(IEventBasedAggregate aggregate, Guid commitId, Action<IDictionary<string, object>> updateHeaders);
+        ResolvedEvent[] GetLastEvents(int count = 20);
     }
 
     public class AggregateVersionException : Exception
@@ -155,6 +158,17 @@ namespace Matcha.WebApi.Domain.DataAccess.EventStoreImpl
         {
             _eventStoreConnection = eventStoreConnection;
             _aggregateIdToStreamName = aggregateIdToStreamName;
+        }
+
+        public ResolvedEvent[] GetLastEvents(int count = 20)
+        {
+            //TODO - get a real user set up
+            var task = _eventStoreConnection.ReadAllEventsBackwardAsync(Position.End, count, true,
+                //new UserCredentials("EventReader", "Password1")
+                new UserCredentials("admin", "changeit")
+                );
+            var result = task.Result;
+            return result.Events;
         }
 
         public TAggregate GetById<TAggregate>(Guid id) where TAggregate : class, IEventBasedAggregate
