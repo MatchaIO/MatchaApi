@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using Matcha.WebApi.Domain.DataAccess.EventStoreImpl;
 using Matcha.WebApi.Messages.Dtos;
 using Matcha.WebApi.Messages.Events;
 using NHibernate.Mapping.ByCode;
@@ -6,19 +8,17 @@ using NHibernate.Mapping.ByCode.Conformist;
 
 namespace Matcha.WebApi.Domain.Models
 {
-    public class Lead
+    public partial class Lead
     {
         public Lead(LeadCreated creationEvent)
+            : this()
         {
-            Validate(creationEvent);
-            Id = creationEvent.Payload.Id;
-            ContactDetails = creationEvent.Payload.ContactDetails;
-            OpportunityProposal = creationEvent.Payload.OpportunityProposal;
+            Create(creationEvent);
         }
 
-        protected Lead() { }
+        //protected Lead() { }//required for NH
 
-        public virtual Guid Id { get; protected set; }
+        //public virtual Guid Id { get; protected set; }
         public virtual bool IsVetted { get; protected set; }
         public virtual Guid? OpportunityId { get; protected set; }
         public virtual bool IsDeleted { get; protected set; }
@@ -33,29 +33,64 @@ namespace Matcha.WebApi.Domain.Models
         /// </summary>
         public virtual dynamic OpportunityProposal { get; protected set; }
 
+        public virtual void Create(LeadCreated creationEvent)
+        {
+            Validate(creationEvent);
+            Process(creationEvent);
+            RaiseEvent(creationEvent);
+        }
+
+        private void Process(LeadCreated creationEvent)
+        {
+            Id = (creationEvent.Payload.Id == Guid.Empty) ? Guid.NewGuid() : creationEvent.Payload.Id;
+            ContactDetails = creationEvent.Payload.ContactDetails;
+            OpportunityProposal = creationEvent.Payload.OpportunityProposal;
+        }
+
         public virtual void Update(LeadUpdated updateEvent)
         {
             if (Id != updateEvent.Payload.Id)
                 throw new ArgumentException("Event is not for this Aggregate", "updateEvent");
 
+            Process(updateEvent);
+            RaiseEvent(updateEvent);
+        }
+
+        private void Process(LeadUpdated updateEvent)
+        {
             ContactDetails = updateEvent.Payload.ContactDetails;
             OpportunityProposal = updateEvent.Payload.OpportunityProposal;
         }
+
         public virtual void Update(LeadDeleted updateEvent)
         {
             if (Id != updateEvent.AggregateId)
                 throw new ArgumentException("Event is not for this Aggregate", "updateEvent");
 
+            Process(updateEvent);
+            RaiseEvent(updateEvent);
+        }
+
+        private void Process(LeadDeleted updateEvent)
+        {
             IsDeleted = true;
         }
+
         public virtual void Update(LeadVetted updateEvent)
         {
             if (Id != updateEvent.AggregateId)
                 throw new ArgumentException("Event is not for this Aggregate", "updateEvent");
 
+            Process(updateEvent);
+            RaiseEvent(updateEvent);
+        }
+
+        private void Process(LeadVetted updateEvent)
+        {
             IsVetted = true;
             OpportunityId = updateEvent.Payload.OpportunityId;
         }
+
         private static void Validate(LeadCreated message)
         {
             //TODO replace with fluent validation if we are going to do this
@@ -63,6 +98,18 @@ namespace Matcha.WebApi.Domain.Models
             Guard.NotDefault(() => message.Payload.Id, message.Payload.Id);
             Guard.NotNull(() => message.Payload.ContactDetails, message.Payload.ContactDetails);
         }
+    }
+
+    public partial class Lead : AggregateBase
+    {
+        protected Lead()
+        {
+            Register<LeadCreated>(Process);
+            Register<LeadUpdated>(Process);
+            Register<LeadDeleted>(Process);
+            Register<LeadVetted>(Process);
+        }
+
     }
 
     public class LeadMap : ClassMapping<Lead>

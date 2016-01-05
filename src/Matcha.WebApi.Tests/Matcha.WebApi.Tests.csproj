@@ -42,6 +42,10 @@
       <HintPath>..\packages\Autofac.WebApi2.3.4.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="EventStore.ClientAPI, Version=3.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EventStore.Client.3.4.0\lib\net40\EventStore.ClientAPI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="ExpectedObjects, Version=1.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ExpectedObjects.1.2.3\lib\net40\ExpectedObjects.dll</HintPath>
       <Private>True</Private>
@@ -120,6 +124,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EventStoreImpl\EventStoreModule.cs" />
     <Compile Include="Features\Leads\LeadScenarios.cs" />
     <Compile Include="Features\Talent\TalentSteps.cs" />
     <Compile Include="Features\Talent\TalentScenarios.cs" />

@@ -3,6 +3,7 @@ using Autofac;
 using Autofac.Integration.WebApi;
 using Matcha.WebApi.Config;
 using Matcha.WebApi.Domain.Models;
+using Matcha.WebApi.Tests.EventStoreImpl;
 using Owin;
 
 namespace Matcha.WebApi.Tests
@@ -24,7 +25,8 @@ namespace Matcha.WebApi.Tests
             var builder = new ContainerBuilder();
 
             builder.RegisterModule(new WebApiAutofacModule());
-            builder.RegisterModule(new NHibernateImpl.SqliteFileStorageNHibernateModule(typeof(Lead).Assembly));
+            //builder.RegisterModule(new NHibernateImpl.SqliteFileStorageNHibernateModule(typeof(Lead).Assembly));
+            builder.RegisterModule(new EventStoreModule());
 
             var container = builder.Build();
             // Configure Web API with the dependency resolver.

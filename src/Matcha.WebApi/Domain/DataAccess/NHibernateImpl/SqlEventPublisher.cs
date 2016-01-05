@@ -1,11 +1,11 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using Matcha.WebApi.Domain.Events;
 using Matcha.WebApi.Handlers;
 using NHibernate;
 using NHibernate.Linq;
 
-namespace Matcha.WebApi.Domain.Events
+namespace Matcha.WebApi.Domain.DataAccess.NHibernateImpl
 {
     public class SqlEventPublisher : IEventPublisher, IEventRepository
     {

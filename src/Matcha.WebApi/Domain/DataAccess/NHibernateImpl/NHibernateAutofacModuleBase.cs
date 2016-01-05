@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Linq;
+using System.Reflection;
 using Autofac;
 using Autofac.Builder;
 using NHibernate;
@@ -18,6 +19,15 @@ namespace Matcha.WebApi.Domain.DataAccess.NHibernateImpl
 
         protected override void Load(ContainerBuilder builder)
         {
+            var assembly = GetType().Assembly;
+            var publicInstances = assembly.GetTypes().Where(t => t.IsPublic && !t.IsAbstract).ToArray();
+            builder.RegisterTypes(publicInstances.Where(t => t.Name.Contains("Repository") && t.Namespace.Contains("NHibernate")).ToArray())
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<SqlEventPublisher>().AsImplementedInterfaces().SingleInstance();
+           
+
             var modelMapper = new ModelMapper();
             modelMapper.AfterMapProperty += ModelMapper_AfterMapProperty;
 

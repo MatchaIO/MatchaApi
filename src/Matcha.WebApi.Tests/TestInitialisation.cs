@@ -16,15 +16,15 @@ namespace Matcha.WebApi.Tests
                 var server = TestServer.Create<TestOwinStartup>();
 
                 var container = TestOwinStartup.Container;
-                var configuration = container.Resolve<NHibernate.Cfg.Configuration>();
+                //var configuration = container.Resolve<NHibernate.Cfg.Configuration>();
 
-                new SchemaExport(configuration).Execute(
-                    useStdOut: false,
-                    execute: true,
-                    justDrop: false,
-                    connection: container.Resolve<ISession>().Connection,
-                    exportOutput: Console.Out
-                    );
+                //new SchemaExport(configuration).Execute(
+                //    useStdOut: false,
+                //    execute: true,
+                //    justDrop: false,
+                //    connection: container.Resolve<ISession>().Connection,
+                //    exportOutput: Console.Out
+                //    );
 
                 return new WebClientProxy(server.HttpClient);
             }

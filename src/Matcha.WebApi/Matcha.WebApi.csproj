@@ -42,6 +42,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.WebApi2.3.4.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
     </Reference>
+    <Reference Include="EventStore.ClientAPI, Version=3.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EventStore.Client.3.4.0\lib\net40\EventStore.ClientAPI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="FluentValidation">
       <HintPath>..\packages\FluentValidation.5.6.2.0\lib\Net45\FluentValidation.dll</HintPath>
     </Reference>
@@ -85,6 +89,8 @@
     <Compile Include="Controllers\OpportunitiesController.cs" />
     <Compile Include="Controllers\TalentController.cs" />
     <Compile Include="Controllers\UriExtensions.cs" />
+    <Compile Include="Domain\DataAccess\EventStoreImpl\LeadRepository.cs" />
+    <Compile Include="Domain\DataAccess\EventStoreImpl\NoOpEventPublisher.cs" />
     <Compile Include="Domain\DataAccess\IOpportunityRepository.cs" />
     <Compile Include="Domain\DataAccess\ITalentRepository.cs" />
     <Compile Include="Domain\DataAccess\NHibernateImpl\LeadRepository.cs" />
@@ -109,7 +115,7 @@
     <Compile Include="Handlers\TalentHandler.cs" />
     <Compile Include="Handlers\LeadHandler.cs" />
     <Compile Include="Handlers\OpportunityHandler.cs" />
-    <Compile Include="Domain\Events\SqlEventPublisher.cs" />
+    <Compile Include="Domain\DataAccess\NHibernateImpl\SqlEventPublisher.cs" />
     <Compile Include="Messages\Commands\CreateLeadCommand.cs" />
     <Compile Include="Messages\Commands\CreateOpportunityCommand.cs" />
     <Compile Include="Messages\Commands\CreateTalentProfileCommand.cs" />

@@ -26,17 +26,18 @@ namespace Matcha.WebApi.Domain.Events
         {
             EventPayloadType = typeof(TPayload).FullName;
         }
-        public virtual TPayload Payload
-        {
-            get
-            {
-                return string.IsNullOrWhiteSpace(EventPayloadAsJson) ? null : Newtonsoft.Json.JsonConvert.DeserializeObject<TPayload>(EventPayloadAsJson);
-            }
-            set
-            {
-                EventPayloadAsJson = value == null ? null : Newtonsoft.Json.JsonConvert.SerializeObject(value);
-            }
-        }
+        //public virtual TPayload Payload
+        //{
+        //    get
+        //    {
+        //        return string.IsNullOrWhiteSpace(EventPayloadAsJson) ? null : Newtonsoft.Json.JsonConvert.DeserializeObject<TPayload>(EventPayloadAsJson);
+        //    }
+        //    set
+        //    {
+        //        EventPayloadAsJson = value == null ? null : Newtonsoft.Json.JsonConvert.SerializeObject(value);
+        //    }
+        //}
+        public virtual TPayload Payload { get; set; }
     }
 
     public class EventMap : ClassMapping<Event>
@@ -48,7 +49,7 @@ namespace Matcha.WebApi.Domain.Events
             Property(x => x.Timestamp);
             Property(x => x.EventType);
             Property(x => x.EventPayloadType);
-            Property(x => x.EventPayloadAsJson);            
+            Property(x => x.EventPayloadAsJson);
         }
     }
 }

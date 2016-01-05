@@ -45,6 +45,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.WebApi2.3.4.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
     </Reference>
+    <Reference Include="EventStore.ClientAPI, Version=3.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EventStore.Client.3.4.0\lib\net40\EventStore.ClientAPI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
@@ -97,6 +101,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Matcha.WebApi.Tests\EventStoreImpl\EventStoreModule.cs">
+      <Link>EventStoreImpl\EventStoreModule.cs</Link>
+    </Compile>
     <Compile Include="..\Matcha.WebApi.Tests\NHibernateImpl\SqliteFileStorageNHibernateModule.cs">
       <Link>NHibernateImpl\SqliteFileStorageNHibernateModule.cs</Link>
     </Compile>

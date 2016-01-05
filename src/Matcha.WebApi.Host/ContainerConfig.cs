@@ -21,22 +21,23 @@ namespace Matcha.WebApi.Host
             var builder = new ContainerBuilder();
 
             builder.RegisterModule(new WebApiAutofacModule());
-            builder.RegisterModule(new Matcha.WebApi.Tests.NHibernateImpl.SqliteFileStorageNHibernateModule(typeof(Lead).Assembly));//TODO this is not prod code - its alsoa copied file for a test project... :/
+            //builder.RegisterModule(new Matcha.WebApi.Tests.NHibernateImpl.SqliteFileStorageNHibernateModule(typeof(Lead).Assembly));//TODO this is not prod code - its alsoa copied file for a test project... :/
+            builder.RegisterModule(new Matcha.WebApi.Tests.EventStoreImpl.EventStoreModule());//TODO this is not prod code - its alsoa copied file for a test project... :/
 
             
             var container = builder.Build();
             // Configure Web API with the dependency resolver.
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
 
-            //Create the database, again not prod ready code, but great for local!!!! :D
-            new SchemaExport(container.Resolve<NHibernate.Cfg.Configuration>())
-                .Execute(
-                    useStdOut: false,
-                    execute: true,
-                    justDrop: false,
-                    connection: container.Resolve<ISession>().Connection,
-                    exportOutput: Console.Out
-                );
+            ////Create the database, again not prod ready code, but great for local!!!! :D
+            //new SchemaExport(container.Resolve<NHibernate.Cfg.Configuration>())
+            //    .Execute(
+            //        useStdOut: false,
+            //        execute: true,
+            //        justDrop: false,
+            //        connection: container.Resolve<ISession>().Connection,
+            //        exportOutput: Console.Out
+            //    );
 
             return container;
         }
